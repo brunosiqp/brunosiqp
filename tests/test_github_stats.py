@@ -12,18 +12,29 @@ import github_stats  # noqa: E402
 SAMPLE = {
     "contributions": 207,
     "commits": 176,
-    "pull_requests": 34,
+    "pull_requests": 7,
     "issues": 14,
+    "pull_requests_total": 34,
     "repositories": 42,
     "stars": 3,
     "since": 2024,
+    "calendar": [
+        [{"date": "2026-09-27", "count": 0}, {"date": "2026-09-28", "count": 5},
+         {"date": "2026-09-29", "count": 10}],
+        [{"date": "2026-10-04", "count": 1}],
+    ],
 }
+
+CALENDAR_WEEKS = [
+    {"contributionDays": [{"date": d["date"], "contributionCount": d["count"]} for d in week]}
+    for week in SAMPLE["calendar"]
+]
 
 
 class BuildSvgTests(unittest.TestCase):
     def test_build_svg_is_valid_xml(self):
         doc = minidom.parseString(github_stats.build_svg(SAMPLE))
-        self.assertEqual(doc.documentElement.getAttribute("width"), "700")
+        self.assertEqual(doc.documentElement.getAttribute("width"), "830")
 
     def test_build_svg_shows_every_label_and_value(self):
         svg = github_stats.build_svg(SAMPLE)
@@ -47,6 +58,25 @@ class BuildSvgTests(unittest.TestCase):
         self.assertIn("A&lt;B", svg)
         minidom.parseString(svg)
 
+    def test_level_for_buckets_counts(self):
+        self.assertEqual(github_stats.level_for(0, 10), 0)
+        self.assertEqual(github_stats.level_for(1, 10), 1)
+        self.assertEqual(github_stats.level_for(5, 10), 2)
+        self.assertEqual(github_stats.level_for(10, 10), 4)
+        self.assertEqual(github_stats.level_for(0, 0), 0)
+
+    def test_build_svg_draws_one_cell_per_day(self):
+        svg = github_stats.build_svg(SAMPLE)
+        self.assertEqual(svg.count('class="day"'), 4)
+
+    def test_build_svg_labels_months(self):
+        svg = github_stats.build_svg(SAMPLE)
+        self.assertIn(">Oct<", svg)
+
+    def test_build_svg_hides_partial_first_month(self):
+        svg = github_stats.build_svg(SAMPLE)
+        self.assertNotIn(">Sep<", svg)
+
     def test_build_svg_draws_icon_per_row(self):
         svg = github_stats.build_svg(SAMPLE)
         self.assertEqual(svg.count('class="icon"'), len(github_stats.STAT_ROWS))
@@ -69,7 +99,8 @@ def viewer_page(stars, has_next, cursor):
                     "totalCommitContributions": 176,
                     "restrictedContributionsCount": 6,
                     "totalIssueContributions": 14,
-                    "contributionCalendar": {"totalContributions": 207},
+                    "totalPullRequestContributions": 7,
+                    "contributionCalendar": {"totalContributions": 207, "weeks": CALENDAR_WEEKS},
                 },
                 "repositories": {
                     "totalCount": 42,

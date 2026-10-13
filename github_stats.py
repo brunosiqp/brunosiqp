@@ -4,8 +4,10 @@ token owner (public and private contributions). Only totals are printed or drawn
 never repository names.
 """
 
+import math
 import os
 import sys
+from datetime import date
 from html import escape
 
 import requests
@@ -21,7 +23,11 @@ query($cursor: String) {
     contributionsCollection {
       totalCommitContributions
       totalIssueContributions
-      contributionCalendar { totalContributions }
+      totalPullRequestContributions
+      contributionCalendar {
+        totalContributions
+        weeks { contributionDays { date contributionCount } }
+      }
     }
     repositories(ownerAffiliations: OWNER, first: 100, after: $cursor) {
       totalCount
@@ -34,16 +40,19 @@ query($cursor: String) {
 
 # (key in the stats dict, label shown on the card), in display order.
 STAT_ROWS = [
-    ("contributions", "Contributions (last year)"),
-    ("commits", "Commits (last year)"),
+    ("contributions", "Contributions"),
+    ("commits", "Commits"),
     ("pull_requests", "Pull requests"),
-    ("issues", "Issues (last year)"),
+    ("issues", "Issues"),
     ("repositories", "Repositories"),
-    ("stars", "Stars earned"),
+    ("pull_requests_total", "Pull requests (all time)"),
+    ("stars", "Stars"),
     ("since", "On GitHub since"),
 ]
 
 ACCENT = "#58a6ff"
+HEAT_COLORS = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"]
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 # 16px path data from Primer Octicons (MIT License, GitHub Inc.), one icon per row.
 ICONS = {
@@ -55,6 +64,7 @@ ICONS = {
     "stars": ["M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"],
     "since": ["M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 0 1 4.75 0ZM2.5 7.5v6.75c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7.5Zm10.75-4H2.75a.25.25 0 0 0-.25.25V6h11V3.75a.25.25 0 0 0-.25-.25Z"],
 }
+ICONS["pull_requests_total"] = ICONS["pull_requests"]
 
 
 def graphql(token, query, variables=None):
@@ -88,11 +98,16 @@ def fetch_stats(token):
     return {
         "contributions": contrib["contributionCalendar"]["totalContributions"],
         "commits": contrib["totalCommitContributions"],
-        "pull_requests": first["pullRequests"]["totalCount"],
+        "pull_requests": contrib["totalPullRequestContributions"],
         "issues": contrib["totalIssueContributions"],
+        "pull_requests_total": first["pullRequests"]["totalCount"],
         "repositories": first["repositories"]["totalCount"],
         "stars": stars,
         "since": int(first["createdAt"][:4]),
+        "calendar": [
+            [{"date": d["date"], "count": d["contributionCount"]} for d in week["contributionDays"]]
+            for week in contrib["contributionCalendar"]["weeks"]
+        ],
     }
 
 
@@ -100,38 +115,109 @@ def fmt_value(value):
     return f"{value:,}"
 
 
-def build_svg(stats, width=700, title="GitHub Stats"):
-    x = 20
-    col_width = (width - 2 * x) // 2
-    rows_per_col = (len(STAT_ROWS) + 1) // 2
-    top = 72
-    row_height = 30
+def level_for(count, max_count):
+    if count <= 0 or max_count <= 0:
+        return 0
+    return min(4, math.ceil(4 * count / max_count))
 
-    items = []
-    for i, (key, label) in enumerate(STAT_ROWS):
-        col, row = divmod(i, rows_per_col)
-        lx = x + col * (col_width + 20)
-        ly = top + row * row_height
-        value = str(stats[key]) if key == "since" else fmt_value(stats[key])
-        items.append(
-            f'<g class="icon" transform="translate({lx} {ly - 12})" fill="{ACCENT}">'
-            + "".join(f'<path d="{d}" />' for d in ICONS.get(key, []))
-            + '</g>'
-            f'<text x="{lx + 24}" y="{ly}" class="label">{escape(label)}</text>'
-            f'<text x="{lx + col_width - 20}" y="{ly}" text-anchor="end" class="value">{escape(value)}</text>'
+
+def build_heatmap(calendar, x, y):
+    """Contribution grid like the GitHub profile: one column per week, Sunday on top."""
+    step = 14
+    max_count = max((day["count"] for week in calendar for day in week), default=0)
+    cells = []
+    changes = []
+    for w, week in enumerate(calendar):
+        month = date.fromisoformat(week[0]["date"]).month
+        if not changes or changes[-1][1] != month:
+            changes.append((w, month))
+    if len(changes) > 1 and changes[1][0] - changes[0][0] < 3:
+        changes.pop(0)
+    months = [
+        f'<text x="{x + w * step}" y="{y - 8}" class="muted">{MONTHS[month - 1]}</text>'
+        for w, month in changes
+    ]
+    for w, week in enumerate(calendar):
+        cx = x + w * step
+        for day in week:
+            row = (date.fromisoformat(day["date"]).weekday() + 1) % 7
+            color = HEAT_COLORS[level_for(day["count"], max_count)]
+            cells.append(
+                f'<rect class="day" x="{cx}" y="{y + row * step}" width="11" height="11" rx="2" fill="{color}" />'
+            )
+    weekdays = "".join(
+        f'<text x="{x - 30}" y="{y + row * step + 10}" class="muted">{name}</text>'
+        for row, name in ((1, "Mon"), (3, "Wed"), (5, "Fri"))
+    )
+    return "".join(months) + weekdays + "".join(cells)
+
+
+def build_svg(stats, width=830, title="GitHub Activity"):
+    pad = 28
+    tiles = STAT_ROWS[:4]
+    extras = STAT_ROWS[4:]
+    gap = 14
+    tile_w = (width - 2 * pad - gap * (len(tiles) - 1)) / max(len(tiles), 1)
+    tile_y, tile_h = 84, 84
+
+    def value_of(key):
+        return str(stats[key]) if key == "since" else fmt_value(stats[key])
+
+    def icon(key, ix, iy):
+        paths = "".join(f'<path d="{d}" />' for d in ICONS.get(key, []))
+        return f'<g class="icon" transform="translate({ix:.0f} {iy:.0f})" fill="{ACCENT}">{paths}</g>'
+
+    parts = []
+    for i, (key, label) in enumerate(tiles):
+        tx = pad + i * (tile_w + gap)
+        parts.append(
+            f'<rect x="{tx:.0f}" y="{tile_y}" width="{tile_w:.0f}" height="{tile_h}" rx="10" class="tile" />'
+            + icon(key, tx + 16, tile_y + 16)
+            + f'<text x="{tx + 40:.0f}" y="{tile_y + 29}" class="muted">{escape(label)}</text>'
+            f'<text x="{tx + 16:.0f}" y="{tile_y + 68}" class="big">{escape(value_of(key))}</text>'
         )
 
-    height = top + (rows_per_col - 1) * row_height + 28
+    extra_y = tile_y + tile_h + 34
+    # Estimated text widths (13px Segoe UI) so the items spread evenly across the row.
+    widths = [24 + 7 * len(label) + 8 + 8 * len(value_of(key)) for key, label in extras]
+    spacing = (width - 2 * pad - sum(widths)) / max(len(extras) - 1, 1)
+    ex = pad
+    for (key, label), item_width in zip(extras, widths):
+        parts.append(
+            icon(key, ex, extra_y - 12)
+            + f'<text x="{ex + 24:.0f}" y="{extra_y}"><tspan class="label">{escape(label)}</tspan>'
+            f'<tspan dx="8" class="value">{escape(value_of(key))}</tspan></text>'
+        )
+        ex += item_width + spacing
+
+    calendar = stats.get("calendar", [])
+    heat_y = extra_y + 52
+    parts.append(build_heatmap(calendar, pad + 30, heat_y))
+
+    legend_y = heat_y + 7 * 14 + 14
+    legend_x = width - pad - 5 * 14 - 34
+    parts.append(f'<text x="{legend_x - 34}" y="{legend_y + 10}" class="muted">Less</text>')
+    parts.extend(
+        f'<rect x="{legend_x + i * 14}" y="{legend_y}" width="11" height="11" rx="2" fill="{c}" />'
+        for i, c in enumerate(HEAT_COLORS)
+    )
+    parts.append(f'<text x="{legend_x + 5 * 14 + 4}" y="{legend_y + 10}" class="muted">More</text>')
+    height = legend_y + 32
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
   <style>
     .title {{ font: 600 20px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }}
-    .label {{ font: 400 14px 'Segoe UI', Ubuntu, Sans-Serif; fill: #d0d0d0; }}
-    .value {{ font: 700 14px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }}
+    .subtitle {{ font: 400 13px 'Segoe UI', Ubuntu, Sans-Serif; fill: #8b949e; }}
+    .muted {{ font: 400 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: #8b949e; }}
+    .label {{ font: 400 13px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c9d1d9; }}
+    .value {{ font: 700 13px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }}
+    .big {{ font: 700 28px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }}
+    .tile {{ fill: #161b22; stroke: #30363d; }}
   </style>
-  <rect width="100%" height="100%" rx="8" fill="#0d1117" />
-  <text x="20" y="35" class="title">{escape(title)}</text>
-  {''.join(items)}
+  <rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="12" fill="#0d1117" stroke="#30363d" />
+  <text x="{pad}" y="44" class="title">{escape(title)}</text>
+  <text x="{pad}" y="66" class="subtitle">Last 12 months · public and private repositories</text>
+  {''.join(parts)}
 </svg>'''
 
 
