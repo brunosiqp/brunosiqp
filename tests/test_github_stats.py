@@ -1,5 +1,6 @@
 import os
 import sys
+import tempfile
 import unittest
 from unittest import mock
 from xml.dom import minidom
@@ -46,6 +47,10 @@ class BuildSvgTests(unittest.TestCase):
         self.assertIn("A&lt;B", svg)
         minidom.parseString(svg)
 
+    def test_build_svg_draws_icon_per_row(self):
+        svg = github_stats.build_svg(SAMPLE)
+        self.assertEqual(svg.count('class="icon"'), len(github_stats.STAT_ROWS))
+
 
 def fake_response(payload):
     resp = mock.Mock()
@@ -61,7 +66,7 @@ def viewer_page(stars, has_next, cursor):
                 "createdAt": "2024-05-01T19:20:26Z",
                 "pullRequests": {"totalCount": 34},
                 "contributionsCollection": {
-                    "totalCommitContributions": 170,
+                    "totalCommitContributions": 176,
                     "restrictedContributionsCount": 6,
                     "totalIssueContributions": 14,
                     "contributionCalendar": {"totalContributions": 207},
@@ -96,6 +101,38 @@ class FetchStatsTests(unittest.TestCase):
         self.assertEqual(stats["stars"], 3)
         self.assertEqual(post.call_count, 2)
         self.assertEqual(post.call_args_list[1].kwargs["json"]["variables"]["cursor"], "CUR1")
+
+    def test_commits_exclude_restricted_contributions(self):
+        with mock.patch.object(github_stats.requests, "post",
+                               return_value=fake_response(viewer_page([3], False, None))):
+            self.assertEqual(github_stats.fetch_stats("t")["commits"], 176)
+
+    def test_fetch_stats_stops_when_cursor_missing(self):
+        pages = [fake_response(viewer_page([3], True, None))]
+        with mock.patch.object(github_stats.requests, "post", side_effect=pages) as post:
+            self.assertEqual(github_stats.fetch_stats("t")["stars"], 3)
+        self.assertEqual(post.call_count, 1)
+
+    def run_main_against_sentinel(self, env, **post_kwargs):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "github-stats.svg")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write("previous card")
+            with (mock.patch.dict(os.environ, env, clear=True),
+                  mock.patch.object(github_stats, "OUTPUT", path),
+                  mock.patch.object(github_stats.requests, "post", **post_kwargs)):
+                with self.assertRaises((SystemExit, RuntimeError)):
+                    github_stats.main()
+            with open(path, encoding="utf-8") as f:
+                return f.read()
+
+    def test_main_keeps_svg_on_graphql_error(self):
+        content = self.run_main_against_sentinel(
+            {"GH_TOKEN": "t"}, return_value=fake_response({"errors": [{"message": "x"}]}))
+        self.assertEqual(content, "previous card")
+
+    def test_main_keeps_svg_without_token(self):
+        self.assertEqual(self.run_main_against_sentinel({}), "previous card")
 
     def test_main_without_token_exits(self):
         env = {k: v for k, v in os.environ.items() if k != "GH_TOKEN"}

@@ -2,7 +2,7 @@
 
 # Bruno Siqueira
 
-**Senior IT Systems Analyst** · Database, APIs & Automation
+***Senior IT Systems Analyst***<br/>Database · APIs · Automation
 
 Inventti · Blumenau, SC, Brazil
 
