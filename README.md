@@ -14,9 +14,11 @@ Inventti · Blumenau, SC, Brazil
 
 ### About me
 
-- 💼 Senior IT Systems Analyst at **Inventti**, working with Brazilian electronic fiscal documents (NFCom, NF3e, NFSe, NFC-e) for enterprise customers
-- ⚙️ I build **Python automations** that integrate REST APIs, SEFAZ web services and SQL Server databases to process documents in bulk
-- 📈 I create internal tools for support and monitoring: dashboards, alerts and Windows services
+- 💼 Senior IT Systems Analyst at **Inventti**, responsible for automation, process management and team leadership
+- ⚙️ **Automation**: I design and build Python automations and Windows services that integrate REST APIs, web services and SQL Server, processing large volumes of data with logging and error handling
+- 🔄 **Processes**: I create, document and manage operational processes end to end, from mapping and implementation to monitoring and continuous improvement
+- 👥 **Team leadership**: I lead and coordinate the team, setting priorities, distributing work and supporting each analyst's growth
+- 📊 **Dashboards**: I build dashboards and monitoring panels with indicators and alerts that support day-to-day decisions
 - 🎓 Currently pursuing a **postgraduate degree in Data Science & Artificial Intelligence**
 
 ### Tech stack
