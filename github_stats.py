@@ -4,7 +4,34 @@ token owner (public and private contributions). Only totals are printed or drawn
 never repository names.
 """
 
+import os
+import sys
 from html import escape
+
+import requests
+
+GRAPHQL_URL = "https://api.github.com/graphql"
+OUTPUT = "github-stats.svg"
+
+QUERY = """
+query($cursor: String) {
+  viewer {
+    createdAt
+    pullRequests { totalCount }
+    contributionsCollection {
+      totalCommitContributions
+      restrictedContributionsCount
+      totalIssueContributions
+      contributionCalendar { totalContributions }
+    }
+    repositories(ownerAffiliations: OWNER, first: 100, after: $cursor) {
+      totalCount
+      pageInfo { hasNextPage endCursor }
+      nodes { stargazerCount }
+    }
+  }
+}
+"""
 
 # (key in the stats dict, label shown on the card), in display order.
 STAT_ROWS = [
@@ -18,6 +45,45 @@ STAT_ROWS = [
 ]
 
 ACCENT = "#58a6ff"
+
+
+def graphql(token, query, variables=None):
+    resp = requests.post(
+        GRAPHQL_URL,
+        json={"query": query, "variables": variables or {}},
+        headers={"Authorization": f"bearer {token}"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    body = resp.json()
+    if body.get("errors"):
+        raise RuntimeError(f"GraphQL error: {body['errors'][0].get('message')}")
+    return body["data"]
+
+
+def fetch_stats(token):
+    cursor = None
+    stars = 0
+    first = None
+    while True:
+        viewer = graphql(token, QUERY, {"cursor": cursor})["viewer"]
+        first = first or viewer
+        repos = viewer["repositories"]
+        stars += sum(node["stargazerCount"] for node in repos["nodes"])
+        if not repos["pageInfo"]["hasNextPage"]:
+            break
+        cursor = repos["pageInfo"]["endCursor"]
+
+    contrib = first["contributionsCollection"]
+    return {
+        "contributions": contrib["contributionCalendar"]["totalContributions"],
+        "commits": contrib["totalCommitContributions"] + contrib["restrictedContributionsCount"],
+        "pull_requests": first["pullRequests"]["totalCount"],
+        "issues": contrib["totalIssueContributions"],
+        "repositories": first["repositories"]["totalCount"],
+        "stars": stars,
+        "since": int(first["createdAt"][:4]),
+    }
 
 
 def fmt_value(value):
@@ -55,3 +121,20 @@ def build_svg(stats, width=700, title="GitHub Stats"):
   <text x="20" y="35" class="title">{escape(title)}</text>
   {''.join(items)}
 </svg>'''
+
+
+def main():
+    token = os.environ.get("GH_TOKEN")
+    if not token:
+        sys.exit("GH_TOKEN is not set (classic PAT with `repo` and `read:user`).")
+
+    stats = fetch_stats(token)
+    with open(OUTPUT, "w", encoding="utf-8") as f:
+        f.write(build_svg(stats))
+
+    for key, label in STAT_ROWS:
+        print(f"{label}: {stats[key]}")
+
+
+if __name__ == "__main__":
+    main()

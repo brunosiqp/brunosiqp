@@ -47,5 +47,65 @@ class BuildSvgTests(unittest.TestCase):
         minidom.parseString(svg)
 
 
+def fake_response(payload):
+    resp = mock.Mock()
+    resp.json.return_value = payload
+    resp.raise_for_status.return_value = None
+    return resp
+
+
+def viewer_page(stars, has_next, cursor):
+    return {
+        "data": {
+            "viewer": {
+                "createdAt": "2024-05-01T19:20:26Z",
+                "pullRequests": {"totalCount": 34},
+                "contributionsCollection": {
+                    "totalCommitContributions": 170,
+                    "restrictedContributionsCount": 6,
+                    "totalIssueContributions": 14,
+                    "contributionCalendar": {"totalContributions": 207},
+                },
+                "repositories": {
+                    "totalCount": 42,
+                    "pageInfo": {"hasNextPage": has_next, "endCursor": cursor},
+                    "nodes": [{"stargazerCount": s} for s in stars],
+                },
+            }
+        }
+    }
+
+
+class FetchStatsTests(unittest.TestCase):
+    def test_graphql_raises_on_errors(self):
+        with mock.patch.object(github_stats.requests, "post",
+                               return_value=fake_response({"errors": [{"message": "x"}]})):
+            with self.assertRaises(RuntimeError):
+                github_stats.graphql("t", "{ viewer { login } }")
+
+    def test_fetch_stats_maps_fields(self):
+        with mock.patch.object(github_stats.requests, "post",
+                               return_value=fake_response(viewer_page([2, 1, 0], False, None))):
+            self.assertEqual(github_stats.fetch_stats("t"), SAMPLE)
+
+    def test_fetch_stats_paginates_stars(self):
+        pages = [fake_response(viewer_page([2], True, "CUR1")),
+                 fake_response(viewer_page([1], False, None))]
+        with mock.patch.object(github_stats.requests, "post", side_effect=pages) as post:
+            stats = github_stats.fetch_stats("t")
+        self.assertEqual(stats["stars"], 3)
+        self.assertEqual(post.call_count, 2)
+        self.assertEqual(post.call_args_list[1].kwargs["json"]["variables"]["cursor"], "CUR1")
+
+    def test_main_without_token_exits(self):
+        env = {k: v for k, v in os.environ.items() if k != "GH_TOKEN"}
+        with mock.patch.dict(os.environ, env, clear=True), \
+                mock.patch.object(github_stats, "OUTPUT", "should-not-exist.svg"):
+            with self.assertRaises(SystemExit) as ctx:
+                github_stats.main()
+        self.assertNotEqual(ctx.exception.code, 0)
+        self.assertFalse(os.path.exists("should-not-exist.svg"))
+
+
 if __name__ == "__main__":
     unittest.main()
