@@ -16,6 +16,7 @@ concurrency:
 jobs:
   update-stats:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,5 +43,5 @@ jobs:
           git config --local user.name "brunosiqp"
           git add github-stats.svg
           git diff --quiet --cached || git commit -m "chore: update GitHub stats"
-          git pull --rebase
-          git push
+          git pull --rebase origin main
+          git push origin HEAD:main

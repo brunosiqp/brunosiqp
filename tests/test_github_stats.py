@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import tempfile
@@ -162,6 +163,21 @@ class HelperTests(unittest.TestCase):
             with self.assertRaises(github_stats.requests.ConnectionError):
                 list(github_stats.rest_pages("t", "https://api.github.com/x"))
 
+    def test_with_retries_retries_timeouts(self):
+        calls = [github_stats.requests.Timeout("slow"), "ok"]
+        def send():
+            item = calls.pop(0)
+            if isinstance(item, Exception):
+                raise item
+            return item
+        with mock.patch.object(github_stats.time, "sleep"):
+            self.assertEqual(github_stats.with_retries(send), "ok")
+
+    def test_with_retries_retries_server_errors(self):
+        responses = [mock.Mock(status_code=502, headers={}), mock.Mock(status_code=200, headers={})]
+        with mock.patch.object(github_stats.time, "sleep"):
+            self.assertEqual(github_stats.with_retries(lambda: responses.pop(0)).status_code, 200)
+
     def test_rest_pages_reads_items_from_search(self):
         with mock.patch.object(github_stats.requests, "get",
                                return_value=fake_response({"total_count": 1, "items": [{"id": 9}]})):
@@ -215,6 +231,31 @@ class FetchStatsTests(unittest.TestCase):
         self.assertEqual(stats["stars"], 3)
         self.assertEqual(stats["since"], 2024)
         self.assertEqual(sum(d["count"] for w in stats["calendar"] for d in w), 6)
+
+    def test_fetch_stats_skips_failing_repo_without_leaking_its_name(self):
+        def fake_commits(token, login, repo, since):
+            if repo == "brunosiqp/b":
+                raise github_stats.requests.HTTPError(
+                    "404 Client Error: Not Found for url: https://api.github.com/repos/brunosiqp/b/commits")
+            return ["2026-10-14"]
+
+        with (mock.patch.object(github_stats, "graphql", return_value=VIEWER),
+              mock.patch.object(github_stats, "commit_dates", side_effect=fake_commits),
+              mock.patch.object(github_stats, "search_dates", return_value=[]),
+              mock.patch("sys.stdout", new_callable=io.StringIO) as out):
+            stats = github_stats.fetch_stats("t", today=date(2026, 10, 14))
+        self.assertEqual(stats["commits"], 1)
+        self.assertEqual(stats["skipped_repositories"], 1)
+        self.assertNotIn("brunosiqp/b", out.getvalue())
+
+    def test_total_matches_the_heatmap_window(self):
+        old = "2025-10-18"  # exactly 365 days ago: inside a "year", but before the first drawn Sunday
+        with (mock.patch.object(github_stats, "graphql", return_value=VIEWER),
+              mock.patch.object(github_stats, "commit_dates", return_value=[old, "2026-10-14"]),
+              mock.patch.object(github_stats, "search_dates", return_value=[])):
+            stats = github_stats.fetch_stats("t", today=date(2026, 10, 18))  # a Sunday
+        drawn = sum(d["count"] for w in stats["calendar"] for d in w)
+        self.assertEqual(stats["contributions"], drawn)
 
     def run_main_against_sentinel(self, env, **post_kwargs):
         with tempfile.TemporaryDirectory() as tmp:

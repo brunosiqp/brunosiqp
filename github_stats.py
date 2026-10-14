@@ -73,15 +73,26 @@ ICONS = {
 ICONS["pull_requests_total"] = ICONS["pull_requests"]
 
 
+RETRY_STATUS = {429, 502, 503, 504}
+RETRY_ERRORS = (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError)
+
+
 def with_retries(send, attempts=4):
-    """Retries dropped connections (flaky proxies, GitHub hiccups) with a short backoff."""
+    """Retries dropped connections, timeouts and busy/overloaded answers with a short backoff."""
     for attempt in range(attempts):
+        last = attempt == attempts - 1
         try:
-            return send()
-        except requests.ConnectionError:
-            if attempt == attempts - 1:
+            resp = send()
+        except RETRY_ERRORS:
+            if last:
                 raise
             time.sleep(2 ** attempt)
+            continue
+        if getattr(resp, "status_code", None) in RETRY_STATUS and not last:
+            wait = resp.headers.get("Retry-After")
+            time.sleep(int(wait) if wait and wait.isdigit() else 2 ** attempt)
+            continue
+        return resp
 
 
 def graphql(token, query, variables=None):
@@ -159,7 +170,8 @@ def build_calendar(dates, today):
 
 def fetch_stats(token, today=None):
     today = today or datetime.now(LOCAL_TZ).date()
-    year_ago = today - timedelta(days=365)
+    # Same window as the heatmap, so the totals always match the drawn cells.
+    year_ago = date.fromisoformat(build_calendar([], today)[0][0]["date"])
     since = f"{year_ago.isoformat()}T00:00:00Z"
 
     cursor = None
@@ -176,9 +188,15 @@ def fetch_stats(token, today=None):
 
     login = first["login"]
     commits = []
+    skipped = 0
     for repo in repos:
-        if not repo["isFork"] and not repo["isEmpty"]:
+        if repo["isFork"] or repo["isEmpty"]:
+            continue
+        try:
             commits += commit_dates(token, login, repo["nameWithOwner"], since)
+        except requests.RequestException:
+            # The error text contains the repository URL; never let it reach the public log.
+            skipped += 1
     prs = search_dates(token, f"author:{login} type:pr created:>={year_ago.isoformat()}")
     issues = search_dates(token, f"author:{login} type:issue created:>={year_ago.isoformat()}")
 
@@ -195,6 +213,7 @@ def fetch_stats(token, today=None):
         "stars": sum(repo["stargazerCount"] for repo in repos),
         "since": int(first["createdAt"][:4]),
         "calendar": build_calendar(activity, today),
+        "skipped_repositories": skipped,
     }
 
 
@@ -311,7 +330,7 @@ def build_svg(stats, width=830, title="GitHub Activity"):
   </style>
   <rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="12" fill="#0d1117" stroke="#30363d" />
   <text x="{pad}" y="44" class="title">{escape(title)}</text>
-  <text x="{pad}" y="66" class="subtitle">Last 12 months · public and private repositories</text>
+  <text x="{pad}" y="66" class="subtitle">Last 12 months · all owned repositories, public and private</text>
   {''.join(parts)}
 </svg>'''
 
@@ -327,6 +346,8 @@ def main():
 
     for key, label in STAT_ROWS:
         print(f"{label}: {stats[key]}")
+    if stats["skipped_repositories"]:
+        print(f"Skipped repositories (API error): {stats['skipped_repositories']}")
 
 
 if __name__ == "__main__":

@@ -168,7 +168,7 @@ def what_i_do_card():
             + icon(icon_name, round(tx + 24), ty + 24)
             + f'<text x="{tx + 58:.0f}" y="{ty + 37}" class="heading">{escape(title)}</text>'
         )
-        for j, line in enumerate(wrap(text, 62, max_lines=4)):
+        for j, line in enumerate(wrap(text, 56, max_lines=4)):
             parts.append(f'<text x="{tx + 20:.0f}" y="{ty + 72 + j * 19}" class="text">{escape(line)}</text>')
     height = 2 * pad + rows * tile_h + (rows - 1) * gap
     return frame(FULL_WIDTH, height, "".join(parts))
@@ -207,7 +207,7 @@ def chip_width(name):
 
 
 def tech_stack_card():
-    pad, label_w, gap, row_gap = 20, 190, 10, 14
+    pad, label_w, gap, row_gap = 20, 214, 10, 14
     chips_x = pad + label_w
     max_x = FULL_WIDTH - pad
     parts = []
