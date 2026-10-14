@@ -12,32 +12,7 @@ Senior IT Systems Analyst at **Inventti**, working on **automation**, **process 
 **administration**. I turn manual, repetitive work into reliable automated flows and make sure the
 team has the processes, training and visibility to run them every day.
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>⚙️ Automation</h4>
-      Python automations and Windows services that integrate REST APIs, web services and SQL Server,
-      processing large volumes of data with logging and error handling.
-    </td>
-    <td width="50%" valign="top">
-      <h4>🗂️ Processes &amp; administration</h4>
-      I create, document and manage operational processes end to end, from mapping and
-      implementation to monitoring and continuous improvement.
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>🤝 Team coordination</h4>
-      I run alignments, trainings and feedback sessions, and coordinate the team on using the
-      automations and handling day-to-day cases.
-    </td>
-    <td width="50%" valign="top">
-      <h4>📊 Dashboards</h4>
-      Dashboards and monitoring panels with indicators and alerts that support day-to-day
-      decisions.
-    </td>
-  </tr>
-</table>
+<img src="./assets/what-i-do.svg" alt="What I do: automation, processes and administration, team coordination and dashboards" width="100%"/>
 
 ## Tech stack
 
@@ -86,13 +61,13 @@ team has the processes, training and visibility to run them every day.
 
 ## Featured projects
 
-| Project | Description | Stack | License |
-| --- | --- | --- | --- |
-| [**MegaQG-Vivo**](https://github.com/brunosiqp/MegaQG-Vivo) | Batch automation of NFCom and NFSe fiscal operations, with a report exporter | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | ![All rights reserved](https://img.shields.io/badge/license-all%20rights%20reserved-6e7681?style=flat-square) |
-| [**LongNameJanitor**](https://github.com/brunosiqp/LongNameJanitor) | Windows service that watches folders and deletes or moves files with long names, with a live web dashboard | ![C#](https://img.shields.io/badge/C%23-512BD4?style=flat-square&logo=dotnet&logoColor=white) | ![MIT](https://img.shields.io/badge/license-MIT-238636?style=flat-square) |
-| [**PDA**](https://github.com/brunosiqp/PDA) | Automation panel: fiscal alerts, monitors, help desk indicators and support tools in a single app | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![Tkinter](https://img.shields.io/badge/Tkinter-30363D?style=flat-square) | ![All rights reserved](https://img.shields.io/badge/license-all%20rights%20reserved-6e7681?style=flat-square) |
-| [**github-lang-stats**](https://github.com/brunosiqp/github-lang-stats) | Generates the languages card below from all public and private repositories, using GitHub Linguist | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white) | ![MIT](https://img.shields.io/badge/license-MIT-238636?style=flat-square) |
-| [**docker-n8n-project**](https://github.com/brunosiqp/docker-n8n-project) | Workflow automation lab with n8n and Docker Compose | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white) ![n8n](https://img.shields.io/badge/n8n-EA4B71?style=flat-square&logo=n8n&logoColor=white) | ![MIT](https://img.shields.io/badge/license-MIT-238636?style=flat-square) |
+<p align="center">
+<a href="https://github.com/brunosiqp/MegaQG-Vivo"><img src="./assets/projects/megaqg-vivo.svg" alt="MegaQG-Vivo: Batch automation of NFCom and NFSe fiscal operations, with a report exporter." width="49%"/></a>
+<a href="https://github.com/brunosiqp/LongNameJanitor"><img src="./assets/projects/longnamejanitor.svg" alt="LongNameJanitor: Windows service that watches folders and deletes or moves files with long names, with a live web dashboard." width="49%"/></a>
+<a href="https://github.com/brunosiqp/PDA"><img src="./assets/projects/pda.svg" alt="PDA: Automation panel: fiscal alerts, monitors, help desk indicators and support tools in a single app." width="49%"/></a>
+<a href="https://github.com/brunosiqp/github-lang-stats"><img src="./assets/projects/github-lang-stats.svg" alt="github-lang-stats: Generates the languages card from all public and private repositories, using GitHub Linguist." width="49%"/></a>
+<a href="https://github.com/brunosiqp/docker-n8n-project"><img src="./assets/projects/docker-n8n-project.svg" alt="docker-n8n-project: Workflow automation lab with n8n and Docker Compose." width="49%"/></a>
+</p>
 
 <sub>See all projects in <a href="https://github.com/brunosiqp?tab=repositories">my repositories</a>.</sub>
 
@@ -108,10 +83,7 @@ team has the processes, training and visibility to run them every day.
 
 ## Education
 
-| Program | Institution | Period | Status |
-| --- | --- | --- | --- |
-| 🎓 **Postgraduate in Data Science & Artificial Intelligence** | SENAI | 2026 – 2027 | ![In progress](https://img.shields.io/badge/in%20progress-D29922?style=flat-square) |
-| 🎓 **Technologist in Systems Analysis and Development** | UNIASSELVI | 2024 – 2026 | ![Completed](https://img.shields.io/badge/completed-238636?style=flat-square) |
+<img src="./assets/education.svg" alt="Postgraduate in Data Science & AI at SENAI (2026 – 2027, in progress); Technologist in Systems Analysis and Development at UNIASSELVI (2024 – 2026, completed)" width="100%"/>
 
 ## Contact
 

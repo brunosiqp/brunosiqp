@@ -44,11 +44,32 @@
     <circle cx="14" cy="20" r="9" class="node" stroke="#58a6ff" />
     <circle cx="14" cy="65" r="9" class="node" stroke="#58a6ff" />
     <circle cx="14" cy="110" r="9" class="node" stroke="#58a6ff" />
-    <rect x="104" y="49" width="32" height="32" rx="8" class="node" stroke="#3fb950" />
+    <rect x="104" y="49" width="32" height="32" rx="8" class="node" stroke="#3fb950">
+      <animate attributeName="stroke-opacity" values="1;0.35;1" dur="2.4s" repeatCount="indefinite" />
+    </rect>
     <path d="M113 65 l5 5 l9 -10" stroke="#3fb950" stroke-width="2.5" />
     <rect x="186" y="37" width="40" height="56" rx="6" class="node" stroke="#58a6ff" />
-    <rect x="194" y="71" width="6" height="14" rx="1" fill="#0e4429" />
-    <rect x="203" y="62" width="6" height="23" rx="1" fill="#26a641" />
-    <rect x="212" y="52" width="6" height="33" rx="1" fill="#39d353" />
+
+    <!-- Data flowing from each source into the process, then out to the dashboard. -->
+    <g fill="#58a6ff" stroke="none">
+      <circle r="3"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0s" path="M14 20 C 60 20, 60 65, 104 65" /></circle>
+      <circle r="3"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.8s" path="M14 65 L 104 65" /></circle>
+      <circle r="3"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.6s" path="M14 110 C 60 110, 60 65, 104 65" /></circle>
+    </g>
+    <circle r="3" fill="#3fb950" stroke="none"><animateMotion dur="1.2s" repeatCount="indefinite" path="M136 65 L 186 65" /></circle>
+
+    <!-- Dashboard bars growing from the baseline (y = 85). -->
+    <rect x="194" y="71" width="6" height="14" rx="1" fill="#0e4429" stroke="none">
+      <animate attributeName="height" values="4;14;14;4" keyTimes="0;0.3;0.8;1" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="y" values="81;71;71;81" keyTimes="0;0.3;0.8;1" dur="3s" repeatCount="indefinite" />
+    </rect>
+    <rect x="203" y="62" width="6" height="23" rx="1" fill="#26a641" stroke="none">
+      <animate attributeName="height" values="4;23;23;4" keyTimes="0;0.4;0.8;1" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="y" values="81;62;62;81" keyTimes="0;0.4;0.8;1" dur="3s" repeatCount="indefinite" />
+    </rect>
+    <rect x="212" y="52" width="6" height="33" rx="1" fill="#39d353" stroke="none">
+      <animate attributeName="height" values="4;33;33;4" keyTimes="0;0.5;0.8;1" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="y" values="81;52;52;81" keyTimes="0;0.5;0.8;1" dur="3s" repeatCount="indefinite" />
+    </rect>
   </g>
 </svg>

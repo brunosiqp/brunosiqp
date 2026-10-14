@@ -53,12 +53,22 @@ class BuildSvgTests(unittest.TestCase):
         self.assertIn("A&lt;B", svg)
         minidom.parseString(svg)
 
-    def test_level_for_buckets_counts(self):
-        self.assertEqual(github_stats.level_for(0, 10), 0)
-        self.assertEqual(github_stats.level_for(1, 10), 1)
-        self.assertEqual(github_stats.level_for(5, 10), 2)
-        self.assertEqual(github_stats.level_for(10, 10), 4)
-        self.assertEqual(github_stats.level_for(0, 0), 0)
+    def test_quartiles_of_active_days(self):
+        self.assertEqual(github_stats.quartiles([0, 1, 2, 3, 4, 5, 6, 7, 8]), [2, 4, 6])
+        self.assertEqual(github_stats.quartiles([0, 0]), [0, 0, 0])
+
+    def test_level_for_uses_quartiles(self):
+        cuts = [2, 4, 6]
+        self.assertEqual(github_stats.level_for(0, cuts), 0)
+        self.assertEqual(github_stats.level_for(1, cuts), 1)
+        self.assertEqual(github_stats.level_for(3, cuts), 2)
+        self.assertEqual(github_stats.level_for(6, cuts), 3)
+        self.assertEqual(github_stats.level_for(50, cuts), 4)
+
+    def test_one_busy_day_does_not_darken_the_rest(self):
+        counts = [1] * 20 + [2] * 20 + [3] * 20 + [100]
+        cuts = github_stats.quartiles(counts)
+        self.assertGreaterEqual(github_stats.level_for(3, cuts), 3)
 
     def test_build_svg_draws_one_cell_per_day(self):
         svg = github_stats.build_svg(SAMPLE)
@@ -137,6 +147,19 @@ class HelperTests(unittest.TestCase):
         with mock.patch.object(github_stats.requests, "get", side_effect=pages) as get:
             self.assertEqual(list(github_stats.rest_pages("t", "https://api.github.com/x")), [1, 2, 3])
         self.assertEqual(get.call_args_list[1].args[0], "https://api.github.com/x?page=2")
+
+    def test_rest_pages_retries_dropped_connection(self):
+        attempts = [github_stats.requests.ConnectionError("eof"), fake_response([1])]
+        with (mock.patch.object(github_stats.requests, "get", side_effect=attempts),
+              mock.patch.object(github_stats.time, "sleep")):
+            self.assertEqual(list(github_stats.rest_pages("t", "https://api.github.com/x")), [1])
+
+    def test_rest_pages_gives_up_after_retries(self):
+        error = github_stats.requests.ConnectionError("eof")
+        with (mock.patch.object(github_stats.requests, "get", side_effect=[error] * 5),
+              mock.patch.object(github_stats.time, "sleep")):
+            with self.assertRaises(github_stats.requests.ConnectionError):
+                list(github_stats.rest_pages("t", "https://api.github.com/x"))
 
     def test_rest_pages_reads_items_from_search(self):
         with mock.patch.object(github_stats.requests, "get",

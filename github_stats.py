@@ -9,6 +9,7 @@ never repository names.
 import math
 import os
 import sys
+import time
 from datetime import date, datetime, timedelta, timezone
 from html import escape
 
@@ -71,13 +72,24 @@ ICONS = {
 ICONS["pull_requests_total"] = ICONS["pull_requests"]
 
 
+def with_retries(send, attempts=4):
+    """Retries dropped connections (flaky proxies, GitHub hiccups) with a short backoff."""
+    for attempt in range(attempts):
+        try:
+            return send()
+        except requests.ConnectionError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(2 ** attempt)
+
+
 def graphql(token, query, variables=None):
-    resp = requests.post(
+    resp = with_retries(lambda: requests.post(
         GRAPHQL_URL,
         json={"query": query, "variables": variables or {}},
         headers={"Authorization": f"bearer {token}"},
         timeout=30,
-    )
+    ))
     resp.raise_for_status()
     body = resp.json()
     if body.get("errors"):
@@ -89,7 +101,7 @@ def rest_pages(token, url, params=None):
     """Yields every item of a paginated REST list (or search) endpoint."""
     headers = {"Authorization": f"bearer {token}", "Accept": "application/vnd.github+json"}
     while url:
-        resp = requests.get(url, params=params, headers=headers, timeout=30)
+        resp = with_retries(lambda: requests.get(url, params=params, headers=headers, timeout=30))
         if resp.status_code == 409:  # empty repository
             return
         resp.raise_for_status()
@@ -189,16 +201,24 @@ def fmt_value(value):
     return f"{value:,}"
 
 
-def level_for(count, max_count):
-    if count <= 0 or max_count <= 0:
+def quartiles(counts):
+    """Cut points between the 4 color levels, taken from the active days only (like GitHub)."""
+    active = sorted(c for c in counts if c > 0)
+    if not active:
+        return [0, 0, 0]
+    return [active[max(0, math.ceil(len(active) * k / 4) - 1)] for k in (1, 2, 3)]
+
+
+def level_for(count, cuts):
+    if count <= 0:
         return 0
-    return min(4, math.ceil(4 * count / max_count))
+    return 1 + sum(count > cut for cut in cuts)
 
 
 def build_heatmap(calendar, x, y):
     """Contribution grid like the GitHub profile: one column per week, Sunday on top."""
     step = 14
-    max_count = max((day["count"] for week in calendar for day in week), default=0)
+    cuts = quartiles([day["count"] for week in calendar for day in week])
     cells = []
     changes = []
     for w, week in enumerate(calendar):
@@ -215,7 +235,7 @@ def build_heatmap(calendar, x, y):
         cx = x + w * step
         for day in week:
             row = (date.fromisoformat(day["date"]).weekday() + 1) % 7
-            color = HEAT_COLORS[level_for(day["count"], max_count)]
+            color = HEAT_COLORS[level_for(day["count"], cuts)]
             cells.append(
                 f'<rect class="day" x="{cx}" y="{y + row * step}" width="11" height="11" rx="2" fill="{color}" />'
             )
