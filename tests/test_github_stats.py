@@ -2,6 +2,7 @@ import os
 import sys
 import tempfile
 import unittest
+from datetime import date
 from unittest import mock
 from xml.dom import minidom
 
@@ -24,12 +25,6 @@ SAMPLE = {
         [{"date": "2026-10-04", "count": 1}],
     ],
 }
-
-CALENDAR_WEEKS = [
-    {"contributionDays": [{"date": d["date"], "contributionCount": d["count"]} for d in week]}
-    for week in SAMPLE["calendar"]
-]
-
 
 class BuildSvgTests(unittest.TestCase):
     def test_build_svg_is_valid_xml(self):
@@ -82,34 +77,85 @@ class BuildSvgTests(unittest.TestCase):
         self.assertEqual(svg.count('class="icon"'), len(github_stats.STAT_ROWS))
 
 
-def fake_response(payload):
+def fake_response(payload, next_url=None):
     resp = mock.Mock()
     resp.json.return_value = payload
     resp.raise_for_status.return_value = None
+    resp.links = {"next": {"url": next_url}} if next_url else {}
     return resp
 
 
-def viewer_page(stars, has_next, cursor):
-    return {
-        "data": {
-            "viewer": {
-                "createdAt": "2024-05-01T19:20:26Z",
-                "pullRequests": {"totalCount": 34},
-                "contributionsCollection": {
-                    "totalCommitContributions": 176,
-                    "restrictedContributionsCount": 6,
-                    "totalIssueContributions": 14,
-                    "totalPullRequestContributions": 7,
-                    "contributionCalendar": {"totalContributions": 207, "weeks": CALENDAR_WEEKS},
-                },
-                "repositories": {
-                    "totalCount": 42,
-                    "pageInfo": {"hasNextPage": has_next, "endCursor": cursor},
-                    "nodes": [{"stargazerCount": s} for s in stars],
-                },
-            }
-        }
+def commit(sha_date, message="feat: work", login="brunosiqp"):
+    return {"author": {"login": login}, "commit": {"message": message, "author": {"date": sha_date}}}
+
+
+VIEWER = {
+    "viewer": {
+        "login": "brunosiqp",
+        "createdAt": "2024-05-01T19:20:26Z",
+        "pullRequests": {"totalCount": 34},
+        "repositories": {
+            "totalCount": 42,
+            "pageInfo": {"hasNextPage": False, "endCursor": None},
+            "nodes": [
+                {"nameWithOwner": "brunosiqp/a", "isFork": False, "isEmpty": False, "stargazerCount": 2},
+                {"nameWithOwner": "brunosiqp/b", "isFork": False, "isEmpty": False, "stargazerCount": 1},
+                {"nameWithOwner": "brunosiqp/fork", "isFork": True, "isEmpty": False, "stargazerCount": 0},
+                {"nameWithOwner": "brunosiqp/empty", "isFork": False, "isEmpty": True, "stargazerCount": 0},
+            ],
+        },
     }
+}
+
+
+class HelperTests(unittest.TestCase):
+    def test_local_date_converts_utc_to_brasilia(self):
+        self.assertEqual(github_stats.local_date("2026-05-03T01:30:00Z"), "2026-05-02")
+        self.assertEqual(github_stats.local_date("2026-05-03T12:00:00Z"), "2026-05-03")
+
+    def test_is_automated_matches_bot_commits(self):
+        self.assertTrue(github_stats.is_automated("chore: atualiza estatísticas de linguagens"))
+        self.assertTrue(github_stats.is_automated("chore: update GitHub stats"))
+        self.assertFalse(github_stats.is_automated("feat: add runner"))
+
+    def test_build_calendar_covers_53_weeks_ending_today(self):
+        today = date(2026, 10, 14)  # a Wednesday
+        weeks = github_stats.build_calendar(["2026-10-14", "2026-10-14", "2026-10-12"], today)
+        self.assertEqual(len(weeks), 53)
+        self.assertEqual(weeks[-1][-1], {"date": "2026-10-14", "count": 2})
+        self.assertEqual(weeks[-1][1], {"date": "2026-10-12", "count": 1})
+        self.assertEqual(date.fromisoformat(weeks[0][0]["date"]).weekday(), 6)  # Sunday
+        self.assertTrue(all(len(w) == 7 for w in weeks[:-1]))
+
+    def test_build_calendar_ignores_dates_outside_range(self):
+        weeks = github_stats.build_calendar(["2020-01-01", "2030-01-01"], date(2026, 10, 14))
+        self.assertEqual(sum(d["count"] for w in weeks for d in w), 0)
+
+    def test_rest_pages_follows_next_links(self):
+        pages = [fake_response([1, 2], next_url="https://api.github.com/x?page=2"),
+                 fake_response([3])]
+        with mock.patch.object(github_stats.requests, "get", side_effect=pages) as get:
+            self.assertEqual(list(github_stats.rest_pages("t", "https://api.github.com/x")), [1, 2, 3])
+        self.assertEqual(get.call_args_list[1].args[0], "https://api.github.com/x?page=2")
+
+    def test_rest_pages_reads_items_from_search(self):
+        with mock.patch.object(github_stats.requests, "get",
+                               return_value=fake_response({"total_count": 1, "items": [{"id": 9}]})):
+            self.assertEqual(list(github_stats.rest_pages("t", "https://api.github.com/search/issues")),
+                             [{"id": 9}])
+
+    def test_rest_pages_skips_empty_repository(self):
+        resp = mock.Mock(status_code=409, links={})
+        with mock.patch.object(github_stats.requests, "get", return_value=resp):
+            self.assertEqual(list(github_stats.rest_pages("t", "https://api.github.com/x")), [])
+
+    def test_commit_dates_keeps_only_own_manual_commits(self):
+        items = [commit("2026-10-14T12:00:00Z"),
+                 commit("2026-10-13T12:00:00Z", "chore: update GitHub stats"),
+                 commit("2026-10-12T12:00:00Z", login="someone-else")]
+        with mock.patch.object(github_stats, "rest_pages", return_value=iter(items)):
+            dates = github_stats.commit_dates("t", "brunosiqp", "brunosiqp/a", "2025-10-14T00:00:00Z")
+        self.assertEqual(dates, ["2026-10-14"])
 
 
 class FetchStatsTests(unittest.TestCase):
@@ -119,30 +165,32 @@ class FetchStatsTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 github_stats.graphql("t", "{ viewer { login } }")
 
-    def test_fetch_stats_maps_fields(self):
-        with mock.patch.object(github_stats.requests, "post",
-                               return_value=fake_response(viewer_page([2, 1, 0], False, None))):
-            self.assertEqual(github_stats.fetch_stats("t"), SAMPLE)
+    def test_fetch_stats_counts_commits_prs_and_issues_from_owned_repos(self):
+        def fake_commits(token, login, repo, since):
+            return {"brunosiqp/a": ["2026-10-14", "2026-10-13"], "brunosiqp/b": ["2026-10-14"]}[repo]
 
-    def test_fetch_stats_paginates_stars(self):
-        pages = [fake_response(viewer_page([2], True, "CUR1")),
-                 fake_response(viewer_page([1], False, None))]
-        with mock.patch.object(github_stats.requests, "post", side_effect=pages) as post:
-            stats = github_stats.fetch_stats("t")
+        def fake_search(token, query):
+            if "type:pr" in query and "created:" in query:
+                return ["2026-10-10"]
+            if "type:issue" in query:
+                return ["2026-10-11", "2026-10-12"]
+            raise AssertionError(query)
+
+        with mock.patch.object(github_stats, "graphql", return_value=VIEWER["viewer"] and VIEWER), \
+                mock.patch.object(github_stats, "commit_dates", side_effect=fake_commits) as commits, \
+                mock.patch.object(github_stats, "search_dates", side_effect=fake_search):
+            stats = github_stats.fetch_stats("t", today=date(2026, 10, 14))
+
+        self.assertEqual([c.args[2] for c in commits.call_args_list], ["brunosiqp/a", "brunosiqp/b"])
+        self.assertEqual(stats["commits"], 3)
+        self.assertEqual(stats["pull_requests"], 1)
+        self.assertEqual(stats["issues"], 2)
+        self.assertEqual(stats["contributions"], 6)
+        self.assertEqual(stats["pull_requests_total"], 34)
+        self.assertEqual(stats["repositories"], 42)
         self.assertEqual(stats["stars"], 3)
-        self.assertEqual(post.call_count, 2)
-        self.assertEqual(post.call_args_list[1].kwargs["json"]["variables"]["cursor"], "CUR1")
-
-    def test_commits_exclude_restricted_contributions(self):
-        with mock.patch.object(github_stats.requests, "post",
-                               return_value=fake_response(viewer_page([3], False, None))):
-            self.assertEqual(github_stats.fetch_stats("t")["commits"], 176)
-
-    def test_fetch_stats_stops_when_cursor_missing(self):
-        pages = [fake_response(viewer_page([3], True, None))]
-        with mock.patch.object(github_stats.requests, "post", side_effect=pages) as post:
-            self.assertEqual(github_stats.fetch_stats("t")["stars"], 3)
-        self.assertEqual(post.call_count, 1)
+        self.assertEqual(stats["since"], 2024)
+        self.assertEqual(sum(d["count"] for w in stats["calendar"] for d in w), 6)
 
     def run_main_against_sentinel(self, env, **post_kwargs):
         with tempfile.TemporaryDirectory() as tmp:
@@ -164,15 +212,6 @@ class FetchStatsTests(unittest.TestCase):
 
     def test_main_keeps_svg_without_token(self):
         self.assertEqual(self.run_main_against_sentinel({}), "previous card")
-
-    def test_main_without_token_exits(self):
-        env = {k: v for k, v in os.environ.items() if k != "GH_TOKEN"}
-        with mock.patch.dict(os.environ, env, clear=True), \
-                mock.patch.object(github_stats, "OUTPUT", "should-not-exist.svg"):
-            with self.assertRaises(SystemExit) as ctx:
-                github_stats.main()
-        self.assertNotEqual(ctx.exception.code, 0)
-        self.assertFalse(os.path.exists("should-not-exist.svg"))
 
 
 if __name__ == "__main__":

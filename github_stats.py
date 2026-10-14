@@ -1,42 +1,46 @@
 """
-Generates github-stats.svg: a "GitHub Stats" card with aggregate numbers for the
-token owner (public and private contributions). Only totals are printed or drawn,
+Generates github-stats.svg: a "GitHub Activity" card with aggregate numbers for the
+token owner. Commits are counted straight from every owned repository (public and
+private), because GitHub's contribution calendar hides private work unless the
+profile setting "Private contributions" is on. Only totals are printed or drawn,
 never repository names.
 """
 
 import math
 import os
 import sys
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from html import escape
 
 import requests
 
-GRAPHQL_URL = "https://api.github.com/graphql"
+API = "https://api.github.com"
+GRAPHQL_URL = f"{API}/graphql"
 OUTPUT = "github-stats.svg"
 
 QUERY = """
 query($cursor: String) {
   viewer {
+    login
     createdAt
     pullRequests { totalCount }
-    contributionsCollection {
-      totalCommitContributions
-      totalIssueContributions
-      totalPullRequestContributions
-      contributionCalendar {
-        totalContributions
-        weeks { contributionDays { date contributionCount } }
-      }
-    }
     repositories(ownerAffiliations: OWNER, first: 100, after: $cursor) {
       totalCount
       pageInfo { hasNextPage endCursor }
-      nodes { stargazerCount }
+      nodes { nameWithOwner isFork isEmpty stargazerCount }
     }
   }
 }
 """
+
+# Brazil has no daylight saving time since 2019, so a fixed offset is enough.
+LOCAL_TZ = timezone(timedelta(hours=-3))
+
+# Commits made by workflows under the owner's identity; not real work.
+AUTOMATED_PREFIXES = (
+    "chore: atualiza estatísticas",
+    "chore: update GitHub stats",
+)
 
 # (key in the stats dict, label shown on the card), in display order.
 STAT_ROWS = [
@@ -81,33 +85,103 @@ def graphql(token, query, variables=None):
     return body["data"]
 
 
-def fetch_stats(token):
+def rest_pages(token, url, params=None):
+    """Yields every item of a paginated REST list (or search) endpoint."""
+    headers = {"Authorization": f"bearer {token}", "Accept": "application/vnd.github+json"}
+    while url:
+        resp = requests.get(url, params=params, headers=headers, timeout=30)
+        if resp.status_code == 409:  # empty repository
+            return
+        resp.raise_for_status()
+        body = resp.json()
+        yield from body["items"] if isinstance(body, dict) else body
+        url = resp.links.get("next", {}).get("url")
+        params = None  # the next link already carries the query string
+
+
+def local_date(timestamp):
+    moment = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+    return moment.astimezone(LOCAL_TZ).date().isoformat()
+
+
+def is_automated(message):
+    return message.startswith(AUTOMATED_PREFIXES)
+
+
+def commit_dates(token, login, repo, since):
+    """Local dates of the user's own commits on the default branch of `repo`."""
+    return [
+        local_date(item["commit"]["author"]["date"])
+        for item in rest_pages(token, f"{API}/repos/{repo}/commits",
+                               {"author": login, "since": since, "per_page": 100})
+        if (item.get("author") or {}).get("login") == login
+        and not is_automated(item["commit"]["message"])
+    ]
+
+
+def search_dates(token, query):
+    """Local creation dates of the issues or pull requests matched by a search query."""
+    return [
+        local_date(item["created_at"])
+        for item in rest_pages(token, f"{API}/search/issues", {"q": query, "per_page": 100})
+    ]
+
+
+def build_calendar(dates, today):
+    """53 weeks ending today, Sunday first, in the shape build_heatmap draws."""
+    counts = {}
+    for day in dates:
+        counts[day] = counts.get(day, 0) + 1
+    start = today - timedelta(weeks=52)
+    start -= timedelta(days=(start.weekday() + 1) % 7)  # back to Sunday
+    weeks = []
+    day = start
+    while day <= today:
+        if not weeks or len(weeks[-1]) == 7:
+            weeks.append([])
+        weeks[-1].append({"date": day.isoformat(), "count": counts.get(day.isoformat(), 0)})
+        day += timedelta(days=1)
+    return weeks
+
+
+def fetch_stats(token, today=None):
+    today = today or datetime.now(LOCAL_TZ).date()
+    year_ago = today - timedelta(days=365)
+    since = f"{year_ago.isoformat()}T00:00:00Z"
+
     cursor = None
-    stars = 0
+    repos = []
     first = None
     while True:
         viewer = graphql(token, QUERY, {"cursor": cursor})["viewer"]
         first = first or viewer
-        repos = viewer["repositories"]
-        stars += sum(node["stargazerCount"] for node in repos["nodes"])
-        cursor = repos["pageInfo"]["endCursor"]
-        if not repos["pageInfo"]["hasNextPage"] or not cursor:
+        page = viewer["repositories"]
+        repos.extend(page["nodes"])
+        cursor = page["pageInfo"]["endCursor"]
+        if not page["pageInfo"]["hasNextPage"] or not cursor:
             break
 
-    contrib = first["contributionsCollection"]
+    login = first["login"]
+    commits = []
+    for repo in repos:
+        if not repo["isFork"] and not repo["isEmpty"]:
+            commits += commit_dates(token, login, repo["nameWithOwner"], since)
+    prs = search_dates(token, f"author:{login} type:pr created:>={year_ago.isoformat()}")
+    issues = search_dates(token, f"author:{login} type:issue created:>={year_ago.isoformat()}")
+
+    year_start = year_ago.isoformat()
+    commits = [d for d in commits if d >= year_start]
+    activity = commits + prs + issues
     return {
-        "contributions": contrib["contributionCalendar"]["totalContributions"],
-        "commits": contrib["totalCommitContributions"],
-        "pull_requests": contrib["totalPullRequestContributions"],
-        "issues": contrib["totalIssueContributions"],
+        "contributions": len(activity),
+        "commits": len(commits),
+        "pull_requests": len(prs),
+        "issues": len(issues),
         "pull_requests_total": first["pullRequests"]["totalCount"],
         "repositories": first["repositories"]["totalCount"],
-        "stars": stars,
+        "stars": sum(repo["stargazerCount"] for repo in repos),
         "since": int(first["createdAt"][:4]),
-        "calendar": [
-            [{"date": d["date"], "count": d["contributionCount"]} for d in week["contributionDays"]]
-            for week in contrib["contributionCalendar"]["weeks"]
-        ],
+        "calendar": build_calendar(activity, today),
     }
 
 
