@@ -3,7 +3,7 @@
     .title { font: 600 16px 'Segoe UI', Ubuntu, Sans-Serif; fill: #58a6ff; }
     .heading { font: 600 15px 'Segoe UI', Ubuntu, Sans-Serif; fill: #ffffff; }
     .text { font: 400 13px 'Segoe UI', Ubuntu, Sans-Serif; fill: #8b949e; }
-    .chip { font: 400 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: #c9d1d9; }
+    .chip { font: 600 13px 'Segoe UI', Ubuntu, Sans-Serif; fill: #e6edf3; }
     .pill { font: 600 11px 'Segoe UI', Ubuntu, Sans-Serif; }
   </style>
   <rect x="0.5" y="0.5" width="829" height="183" rx="12" fill="#0d1117" stroke="#30363d" />

@@ -10,6 +10,7 @@ import sys
 from html import escape
 
 from github_stats import ICONS
+from tech_icons import TECH_ICONS
 
 FONT = "'Segoe UI', Ubuntu, Sans-Serif"
 CARD_WIDTH = 410
@@ -74,6 +75,14 @@ WHAT_I_DO = [
      "decisions."),
 ]
 
+TECH_STACK = [
+    ("Languages", [("Python", "python"), ("C#", "csharp"), ("PowerShell", "powershell"), ("HTML", "html")]),
+    ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle")]),
+    ("Cloud", [("Azure", "azure"), ("Amazon S3", "s3")]),
+    ("Integration & automation", [("REST APIs", "rest"), ("n8n", "n8n"), ("GitHub Actions", "githubactions")]),
+    ("Infra & tools", [("Linux", "linux"), ("Docker", "docker"), ("Git", "git"), ("Godot", "godot")]),
+]
+
 EDUCATION = [
     ("Postgraduate in Data Science & Artificial Intelligence", "SENAI", "2026 – 2027", "In progress"),
     ("Technologist in Systems Analysis and Development", "UNIASSELVI", "2024 – 2026", "Completed"),
@@ -85,7 +94,7 @@ STYLE = f"""  <style>
     .title {{ font: 600 16px {FONT}; fill: {ACCENT}; }}
     .heading {{ font: 600 15px {FONT}; fill: #ffffff; }}
     .text {{ font: 400 13px {FONT}; fill: #8b949e; }}
-    .chip {{ font: 400 12px {FONT}; fill: #c9d1d9; }}
+    .chip {{ font: 600 13px {FONT}; fill: #e6edf3; }}
     .pill {{ font: 600 11px {FONT}; }}
   </style>"""
 
@@ -183,6 +192,42 @@ def education_card():
     return frame(FULL_WIDTH, height, "".join(parts))
 
 
+def tech_chip(name, key, x, y):
+    size, color, path = TECH_ICONS[key]
+    width = chip_width(name)
+    return (
+        f'<rect x="{x:.0f}" y="{y}" width="{width:.0f}" height="34" rx="8" fill="#161b22" stroke="#30363d" />'
+        f'<path transform="translate({x + 12:.0f} {y + 8}) scale({18 / size:.4f})" fill="{color}" d="{path}" />'
+        f'<text x="{x + 38:.0f}" y="{y + 22}" class="chip">{escape(name)}</text>'
+    )
+
+
+def chip_width(name):
+    return 38 + 7.4 * len(name) + 14
+
+
+def tech_stack_card():
+    pad, label_w, gap, row_gap = 20, 190, 10, 14
+    chips_x = pad + label_w
+    max_x = FULL_WIDTH - pad
+    parts = []
+    y = pad
+    for i, (category, tools) in enumerate(TECH_STACK):
+        if i:
+            parts.append(f'<line x1="{pad}" y1="{y - row_gap / 2:.0f}" x2="{max_x}" y2="{y - row_gap / 2:.0f}" stroke="#21262d" />')
+        x, line_y = chips_x, y
+        for name, key in tools:
+            if x + chip_width(name) > max_x:
+                x, line_y = chips_x, line_y + 34 + gap
+            parts.append(tech_chip(name, key, x, line_y))
+            x += chip_width(name) + gap
+        row_bottom = line_y + 34
+        parts.append(f'<text x="{pad + 4}" y="{(y + row_bottom) / 2 + 5:.0f}" class="heading">{escape(category)}</text>')
+        y = row_bottom + row_gap
+    height = y - row_gap + pad
+    return frame(FULL_WIDTH, height, "".join(parts))
+
+
 def card_file(project):
     return f"assets/projects/{project['name'].lower()}.svg"
 
@@ -191,6 +236,7 @@ def write_all(root="."):
     files = {card_file(p): project_card(p) for p in PROJECTS}
     files["assets/what-i-do.svg"] = what_i_do_card()
     files["assets/education.svg"] = education_card()
+    files["assets/tech-stack.svg"] = tech_stack_card()
     for rel, svg in files.items():
         path = os.path.join(root, rel)
         os.makedirs(os.path.dirname(path), exist_ok=True)

@@ -63,13 +63,31 @@ class SectionCardTests(unittest.TestCase):
         self.assertIn(">Completed<", svg)
 
 
+class TechStackCardTests(unittest.TestCase):
+    def test_tech_stack_card_is_valid_and_full_width(self):
+        doc = minidom.parseString(profile_cards.tech_stack_card())
+        self.assertEqual(doc.documentElement.getAttribute("width"), str(profile_cards.FULL_WIDTH))
+
+    def test_tech_stack_card_lists_every_category_and_tool(self):
+        svg = profile_cards.tech_stack_card()
+        for category, tools in profile_cards.TECH_STACK:
+            self.assertIn(profile_cards.escape(category), svg)
+            for name, _key in tools:
+                self.assertIn(f">{profile_cards.escape(name)}<", svg)
+
+    def test_every_tool_has_an_icon(self):
+        for _category, tools in profile_cards.TECH_STACK:
+            for _name, key in tools:
+                self.assertIn(key, profile_cards.TECH_ICONS)
+
+
 class WriteAllTests(unittest.TestCase):
     def test_write_all_creates_every_asset(self):
         with tempfile.TemporaryDirectory() as tmp:
             written = profile_cards.write_all(tmp)
             for rel in written:
                 minidom.parse(os.path.join(tmp, rel))
-        self.assertEqual(len(written), len(profile_cards.PROJECTS) + 2)
+        self.assertEqual(len(written), len(profile_cards.PROJECTS) + 3)
 
 
 if __name__ == "__main__":
