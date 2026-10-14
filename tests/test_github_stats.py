@@ -126,6 +126,7 @@ class HelperTests(unittest.TestCase):
     def test_is_automated_matches_bot_commits(self):
         self.assertTrue(github_stats.is_automated("chore: atualiza estatísticas de linguagens"))
         self.assertTrue(github_stats.is_automated("chore: update GitHub stats"))
+        self.assertTrue(github_stats.is_automated("chore: update language stats"))
         self.assertFalse(github_stats.is_automated("feat: add runner"))
 
     def test_build_calendar_covers_53_weeks_ending_today(self):

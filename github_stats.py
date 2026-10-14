@@ -41,6 +41,7 @@ LOCAL_TZ = timezone(timedelta(hours=-3))
 AUTOMATED_PREFIXES = (
     "chore: atualiza estatísticas",
     "chore: update GitHub stats",
+    "chore: update language stats",
 )
 
 # (key in the stats dict, label shown on the card), in display order.
