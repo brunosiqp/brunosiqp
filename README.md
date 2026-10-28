@@ -12,11 +12,11 @@ Senior IT Systems Analyst at **Inventti**, working on **automation**, **process 
 **administration**. I turn manual, repetitive work into reliable automated flows and make sure the
 team has the processes, training and visibility to run them every day.
 
-<img src="./assets/what-i-do.svg" alt="What I do: automation, processes and administration, team coordination and dashboards" width="100%"/>
+<img src="./assets/what-i-do.svg" alt="What I do: automation, processes and administration, team coordination, dashboards and the Invi AI assistant" width="100%"/>
 
 ## Tech stack
 
-<img src="./assets/tech-stack.svg" alt="Tech stack: Python, C#, PowerShell, HTML; SQL Server, Oracle; Azure, Amazon S3; REST APIs, n8n, GitHub Actions; Linux, Docker, Git, Godot" width="100%"/>
+<img src="./assets/tech-stack.svg" alt="Tech stack. Languages: Python, C#, PowerShell, JavaScript, TypeScript, HTML, CSS; AI and agents: Anthropic API, Claude Code, MCP, AI Agents, LLM Automation; Data: SQL Server, Oracle, Excel Automation; Cloud: Azure, Amazon S3; Integration and automation: REST APIs, Webhooks, n8n, GitHub Actions; Security: LGPD, Cloudflare Zero Trust; Infra and tools: Linux, Windows Server / IIS, Docker, Git, Godot; Currently learning: Hermes Agent, Cloudflare, Information Security, Power BI" width="100%"/>
 
 ## Featured projects
 

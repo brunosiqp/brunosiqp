@@ -24,6 +24,7 @@ OCTICONS = {
     "workflow": "M0 1.75C0 .784.784 0 1.75 0h3.5C6.216 0 7 .784 7 1.75v3.5A1.75 1.75 0 0 1 5.25 7H4v4a1 1 0 0 0 1 1h4v-1.25C9 9.784 9.784 9 10.75 9h3.5c.966 0 1.75.784 1.75 1.75v3.5A1.75 1.75 0 0 1 14.25 16h-3.5A1.75 1.75 0 0 1 9 14.25v-.75H5A2.5 2.5 0 0 1 2.5 11V7h-.75A1.75 1.75 0 0 1 0 5.25Zm1.75-.25a.25.25 0 0 0-.25.25v3.5c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25v-3.5a.25.25 0 0 0-.25-.25Zm9 9a.25.25 0 0 0-.25.25v3.5c0 .138.112.25.25.25h3.5a.25.25 0 0 0 .25-.25v-3.5a.25.25 0 0 0-.25-.25Z",
     "people": "M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4 4 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 3.102 8.05 3.493 3.493 0 0 1 2 5.5ZM11 4a3.001 3.001 0 0 1 2.22 5.018 5.01 5.01 0 0 1 2.56 3.012.749.749 0 0 1-.885.954.752.752 0 0 1-.549-.514 3.507 3.507 0 0 0-2.522-2.372.75.75 0 0 1-.574-.73v-.352a.75.75 0 0 1 .416-.672A1.5 1.5 0 0 0 11 5.5.75.75 0 0 1 11 4Zm-5.5-.5a2 2 0 1 0-.001 3.999A2 2 0 0 0 5.5 3.5Z",
     "graph": ICONS["contributions"][0],
+    "sparkle": "M7.53 1.282a.5.5 0 0 1 .94 0l.478 1.306a7.492 7.492 0 0 0 4.464 4.464l1.305.478a.5.5 0 0 1 0 .94l-1.305.478a7.492 7.492 0 0 0-4.464 4.464l-.478 1.305a.5.5 0 0 1-.94 0l-.478-1.305a7.492 7.492 0 0 0-4.464-4.464L1.282 8.47a.5.5 0 0 1 0-.94l1.306-.478a7.492 7.492 0 0 0 4.464-4.464Z",
     "mortar-board": "M7.693 1.066a.747.747 0 0 1 .614 0l7.25 3.25a.75.75 0 0 1 0 1.368L13 6.831v2.794c0 1.024-.81 1.749-1.66 2.173-.893.447-2.075.702-3.34.702-.278 0-.55-.012-.816-.036a.75.75 0 0 1 .133-1.494c.22.02.45.03.683.03 1.082 0 2.025-.221 2.67-.543.69-.345.83-.682.83-.832V7.503L8.307 8.934a.747.747 0 0 1-.614 0L4 7.28v1.663c.296.105.575.275.812.512.438.438.688 1.059.688 1.796v3a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75v-3c0-.737.25-1.358.688-1.796.237-.237.516-.407.812-.512V6.606L.443 5.684a.75.75 0 0 1 0-1.368ZM2.583 5 8 7.428 13.416 5 8 2.572ZM2.5 11.25v2.25H4v-2.25c0-.388-.125-.611-.25-.735a.697.697 0 0 0-.5-.203.707.707 0 0 0-.5.203c-.125.124-.25.347-.25.735Z",
 }
 
@@ -73,14 +74,27 @@ WHAT_I_DO = [
     ("Dashboards", "graph",
      "Dashboards and monitoring panels with indicators and alerts that support day-to-day "
      "decisions."),
+    ("AI assistant (Invi)", "sparkle",
+     "I help build Invi, the company's internal AI assistant: our automations log every run "
+     "as structured, LGPD-sanitized data that feeds it and turns into real actions for the team."),
 ]
 
+LEARNING = "Currently learning"
+
 TECH_STACK = [
-    ("Languages", [("Python", "python"), ("C#", "csharp"), ("PowerShell", "powershell"), ("HTML", "html")]),
-    ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle")]),
+    ("Languages", [("Python", "python"), ("C#", "csharp"), ("PowerShell", "powershell"),
+                   ("JavaScript", "javascript"), ("TypeScript", "typescript"), ("HTML", "html"), ("CSS", "css")]),
+    ("AI & agents", [("Anthropic API", "anthropic"), ("Claude Code", "claude"), ("MCP", "mcp"),
+                     ("AI Agents", "agents"), ("LLM Automation", "llm")]),
+    ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle"), ("Excel Automation", "excel")]),
     ("Cloud", [("Azure", "azure"), ("Amazon S3", "s3")]),
-    ("Integration & automation", [("REST APIs", "rest"), ("n8n", "n8n"), ("GitHub Actions", "githubactions")]),
-    ("Infra & tools", [("Linux", "linux"), ("Docker", "docker"), ("Git", "git"), ("Godot", "godot")]),
+    ("Integration & automation", [("REST APIs", "rest"), ("Webhooks", "webhooks"), ("n8n", "n8n"),
+                                  ("GitHub Actions", "githubactions")]),
+    ("Security", [("LGPD", "lgpd"), ("Cloudflare Zero Trust", "cloudflare")]),
+    ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"), ("Docker", "docker"),
+                       ("Git", "git"), ("Godot", "godot")]),
+    (LEARNING, [("Hermes Agent", "hermes"), ("Cloudflare", "cloudflare"),
+                ("Information Security", "infosec"), ("Power BI", "powerbi")]),
 ]
 
 EDUCATION = [
@@ -96,6 +110,8 @@ STYLE = f"""  <style>
     .text {{ font: 400 13px {FONT}; fill: #8b949e; }}
     .chip {{ font: 600 13px {FONT}; fill: #e6edf3; }}
     .pill {{ font: 600 11px {FONT}; }}
+    .heading-learning {{ font: 600 15px {FONT}; fill: #D29922; }}
+    .chip-learning {{ fill: #D29922; fill-opacity: 0.08; stroke: #D29922; stroke-opacity: 0.7; stroke-dasharray: 4 3; }}
   </style>"""
 
 
@@ -162,13 +178,14 @@ def what_i_do_card():
         row, col = divmod(i, 2)
         tx = pad + col * (tile_w + gap)
         ty = pad + row * (tile_h + gap)
+        width = FULL_WIDTH - 2 * pad if i == len(WHAT_I_DO) - 1 and len(WHAT_I_DO) % 2 else tile_w
         parts.append(
-            f'<rect x="{tx:.0f}" y="{ty}" width="{tile_w:.0f}" height="{tile_h}" rx="10" fill="#161b22" stroke="#30363d" />'
+            f'<rect x="{tx:.0f}" y="{ty}" width="{width:.0f}" height="{tile_h}" rx="10" fill="#161b22" stroke="#30363d" />'
             + f'<circle cx="{tx + 32:.0f}" cy="{ty + 32}" r="16" fill="{ACCENT}" fill-opacity="0.12" />'
             + icon(icon_name, round(tx + 24), ty + 24)
             + f'<text x="{tx + 58:.0f}" y="{ty + 37}" class="heading">{escape(title)}</text>'
         )
-        for j, line in enumerate(wrap(text, 56, max_lines=4)):
+        for j, line in enumerate(wrap(text, 56 if width == tile_w else 118, max_lines=4)):
             parts.append(f'<text x="{tx + 20:.0f}" y="{ty + 72 + j * 19}" class="text">{escape(line)}</text>')
     height = 2 * pad + rows * tile_h + (rows - 1) * gap
     return frame(FULL_WIDTH, height, "".join(parts))
@@ -192,11 +209,12 @@ def education_card():
     return frame(FULL_WIDTH, height, "".join(parts))
 
 
-def tech_chip(name, key, x, y):
+def tech_chip(name, key, x, y, learning=False):
     size, color, path = TECH_ICONS[key]
     width = chip_width(name)
+    box = 'class="chip-learning"' if learning else 'fill="#161b22" stroke="#30363d"'
     return (
-        f'<rect x="{x:.0f}" y="{y}" width="{width:.0f}" height="34" rx="8" fill="#161b22" stroke="#30363d" />'
+        f'<rect x="{x:.0f}" y="{y}" width="{width:.0f}" height="34" rx="8" {box} />'
         f'<path transform="translate({x + 12:.0f} {y + 8}) scale({18 / size:.4f})" fill="{color}" d="{path}" />'
         f'<text x="{x + 38:.0f}" y="{y + 22}" class="chip">{escape(name)}</text>'
     )
@@ -219,10 +237,11 @@ def tech_stack_card():
         for name, key in tools:
             if x + chip_width(name) > max_x:
                 x, line_y = chips_x, line_y + 34 + gap
-            parts.append(tech_chip(name, key, x, line_y))
+            parts.append(tech_chip(name, key, x, line_y, learning=category == LEARNING))
             x += chip_width(name) + gap
         row_bottom = line_y + 34
-        parts.append(f'<text x="{pad + 4}" y="{(y + row_bottom) / 2 + 5:.0f}" class="heading">{escape(category)}</text>')
+        heading = "heading-learning" if category == LEARNING else "heading"
+        parts.append(f'<text x="{pad + 4}" y="{(y + row_bottom) / 2 + 5:.0f}" class="{heading}">{escape(category)}</text>')
         y = row_bottom + row_gap
     height = y - row_gap + pad
     return frame(FULL_WIDTH, height, "".join(parts))

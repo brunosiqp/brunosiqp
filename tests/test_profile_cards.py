@@ -81,6 +81,36 @@ class TechStackCardTests(unittest.TestCase):
                 self.assertIn(key, profile_cards.TECH_ICONS)
 
 
+class StackContentTests(unittest.TestCase):
+    def tools_in(self, category):
+        return [name for cat, tools in profile_cards.TECH_STACK if cat == category for name, _ in tools]
+
+    def test_ai_and_agents_category(self):
+        self.assertEqual(self.tools_in("AI & agents"),
+                         ["Anthropic API", "Claude Code", "MCP", "AI Agents", "LLM Automation"])
+
+    def test_security_category(self):
+        self.assertEqual(self.tools_in("Security"), ["LGPD", "Cloudflare Zero Trust"])
+
+    def test_new_tools_in_existing_categories(self):
+        for category, name in (("Languages", "TypeScript"), ("Languages", "JavaScript"), ("Languages", "CSS"),
+                               ("Data", "Excel Automation"), ("Integration & automation", "Webhooks"),
+                               ("Infra & tools", "Windows Server / IIS")):
+            self.assertIn(name, self.tools_in(category))
+
+    def test_learning_row_is_last_and_styled_apart(self):
+        self.assertEqual(profile_cards.TECH_STACK[-1][0], profile_cards.LEARNING)
+        learning = self.tools_in(profile_cards.LEARNING)
+        self.assertEqual(learning, ["Hermes Agent", "Cloudflare", "Information Security", "Power BI"])
+        svg = profile_cards.tech_stack_card()
+        self.assertEqual(svg.count('class="chip-learning"'), len(learning))
+
+    def test_what_i_do_includes_invi(self):
+        titles = [title for title, _icon, _text in profile_cards.WHAT_I_DO]
+        self.assertIn("AI assistant (Invi)", titles)
+        self.assertIn("AI assistant (Invi)", profile_cards.what_i_do_card())
+
+
 class WriteAllTests(unittest.TestCase):
     def test_write_all_creates_every_asset(self):
         with tempfile.TemporaryDirectory() as tmp:
