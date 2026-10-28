@@ -45,6 +45,8 @@ class ProjectCardTests(unittest.TestCase):
         first = profile_cards.PROJECTS[0]
         self.assertEqual(first["name"], "envy-converter")
         self.assertEqual([label for label, _ in first["stack"]], ["C#", "WPF"])
+        self.assertEqual(first["license"], "MIT")
+        self.assertIn(">MIT<", profile_cards.project_card(first))
 
     def test_readme_shows_every_project_card(self):
         readme = open(os.path.join(os.path.dirname(__file__), "..", "README.md"), encoding="utf-8").read()
