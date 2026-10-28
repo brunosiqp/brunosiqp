@@ -36,10 +36,12 @@ team has the processes, training and visibility to run them every day.
 <div align="center">
   <img src="./github-stats.svg" alt="GitHub activity in the last 12 months" width="100%"/>
   <br/><br/>
-  <img src="https://raw.githubusercontent.com/brunosiqp/github-lang-stats/main/language-stats.svg" alt="Most used languages" width="100%"/>
+  <img src="https://raw.githubusercontent.com/brunosiqp/github-lang-stats/main/language-stats.svg" alt="Most used languages by number of repositories" width="100%"/>
+  <br/><br/>
+  <img src="https://raw.githubusercontent.com/brunosiqp/github-lang-stats/main/language-stats-size.svg" alt="Languages by code size" width="100%"/>
 </div>
 
-<sub>Both cards include private repositories and are updated automatically every day.</sub>
+<sub>All cards include private repositories and are updated automatically every day. Languages are shown two ways: by how many repositories use each one, and by code size.</sub>
 
 ## Education
 
