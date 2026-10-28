@@ -41,6 +41,17 @@ class ProjectCardTests(unittest.TestCase):
         self.assertIn(">Docker<", svg)
         self.assertIn(">MIT<", svg)
 
+    def test_envy_converter_is_featured_first(self):
+        first = profile_cards.PROJECTS[0]
+        self.assertEqual(first["name"], "envy-converter")
+        self.assertEqual([label for label, _ in first["stack"]], ["C#", "WPF"])
+
+    def test_readme_shows_every_project_card(self):
+        readme = open(os.path.join(os.path.dirname(__file__), "..", "README.md"), encoding="utf-8").read()
+        for project in profile_cards.PROJECTS:
+            self.assertIn(f'./{profile_cards.card_file(project)}', readme)
+            self.assertIn(f'https://github.com/brunosiqp/{project["name"]}', readme)
+
     def test_every_project_has_a_card_file_name(self):
         names = [profile_cards.card_file(p) for p in profile_cards.PROJECTS]
         self.assertEqual(len(names), len(set(names)))

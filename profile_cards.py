@@ -30,6 +30,12 @@ OCTICONS = {
 
 PROJECTS = [
     {
+        "name": "envy-converter",
+        "description": "Windows app that converts PDF to DOCX and other formats without corrupting the files.",
+        "stack": [("C#", "#178600"), ("WPF", "#512BD4")],
+        "license": None,
+    },
+    {
         "name": "MegaQG-Vivo",
         "description": "Batch automation of NFCom and NFSe fiscal operations, with a report exporter.",
         "stack": [("Python", "#3572A5")],

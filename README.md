@@ -21,6 +21,7 @@ team has the processes, training and visibility to run them every day.
 ## Featured projects
 
 <p align="center">
+<a href="https://github.com/brunosiqp/envy-converter"><img src="./assets/projects/envy-converter.svg" alt="envy-converter: Windows app that converts PDF to DOCX and other formats without corrupting the files." width="49%"/></a>
 <a href="https://github.com/brunosiqp/MegaQG-Vivo"><img src="./assets/projects/megaqg-vivo.svg" alt="MegaQG-Vivo: Batch automation of NFCom and NFSe fiscal operations, with a report exporter." width="49%"/></a>
 <a href="https://github.com/brunosiqp/LongNameJanitor"><img src="./assets/projects/longnamejanitor.svg" alt="LongNameJanitor: Windows service that watches folders and deletes or moves files with long names, with a live web dashboard." width="49%"/></a>
 <a href="https://github.com/brunosiqp/PDA"><img src="./assets/projects/pda.svg" alt="PDA: Automation panel: fiscal alerts, monitors, help desk indicators and support tools in a single app." width="49%"/></a>
