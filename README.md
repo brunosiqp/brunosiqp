@@ -38,7 +38,7 @@ team has the processes, training and visibility to run them every day.
   <img src="https://raw.githubusercontent.com/brunosiqp/github-lang-stats/main/language-stats.svg" alt="Most used languages" width="100%"/>
 </div>
 
-<sub>Both cards include private repositories and are updated automatically every day at 08:00 (Brasília time).</sub>
+<sub>Both cards include private repositories and are updated automatically every day.</sub>
 
 ## Education
 
