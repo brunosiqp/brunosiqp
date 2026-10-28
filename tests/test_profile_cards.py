@@ -110,6 +110,11 @@ class StackContentTests(unittest.TestCase):
         self.assertIn("AI assistant (Invi)", titles)
         self.assertIn("AI assistant (Invi)", profile_cards.what_i_do_card())
 
+    def test_invi_text_says_i_built_it(self):
+        text = next(text for title, _icon, text in profile_cards.WHAT_I_DO if "Invi" in title)
+        self.assertTrue(text.startswith("I built Invi"))
+        self.assertNotIn("help build", text)
+
 
 class WriteAllTests(unittest.TestCase):
     def test_write_all_creates_every_asset(self):

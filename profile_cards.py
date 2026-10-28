@@ -75,7 +75,7 @@ WHAT_I_DO = [
      "Dashboards and monitoring panels with indicators and alerts that support day-to-day "
      "decisions."),
     ("AI assistant (Invi)", "sparkle",
-     "I help build Invi, the company's internal AI assistant: our automations log every run "
+     "I built Invi, the company's internal AI assistant: our automations log every run "
      "as structured, LGPD-sanitized data that feeds it and turns into real actions for the team."),
 ]
 
