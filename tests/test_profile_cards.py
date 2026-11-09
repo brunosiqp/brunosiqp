@@ -100,7 +100,7 @@ class StackContentTests(unittest.TestCase):
 
     def test_ai_and_agents_category(self):
         self.assertEqual(self.tools_in("AI & agents"),
-                         ["Anthropic API", "Claude Code", "MCP", "AI Agents", "LLM Automation"])
+                         ["Anthropic API", "Claude Code", "AI Agents"])
 
     def test_security_category(self):
         self.assertEqual(self.tools_in("Security"), ["LGPD", "Cloudflare Zero Trust"])
@@ -114,7 +114,8 @@ class StackContentTests(unittest.TestCase):
     def test_learning_row_is_last_and_styled_apart(self):
         self.assertEqual(profile_cards.TECH_STACK[-1][0], profile_cards.LEARNING)
         learning = self.tools_in(profile_cards.LEARNING)
-        self.assertEqual(learning, ["Hermes Agent", "Cloudflare", "Information Security", "Power BI"])
+        self.assertEqual(learning, ["MCP", "LLM Automation", "Hermes Agent", "Cloudflare",
+                                    "Information Security", "Power BI"])
         svg = profile_cards.tech_stack_card()
         self.assertEqual(svg.count('class="chip-learning"'), len(learning))
 

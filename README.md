@@ -16,7 +16,7 @@ team has the processes, training and visibility to run them every day.
 
 ## Tech stack
 
-<img src="./assets/tech-stack.svg" alt="Tech stack. Languages: Python, C#, PowerShell, JavaScript, TypeScript, HTML, CSS; AI and agents: Anthropic API, Claude Code, MCP, AI Agents, LLM Automation; Data: SQL Server, Oracle, Excel Automation; Cloud: Azure, Amazon S3; Integration and automation: REST APIs, Webhooks, n8n, GitHub Actions; Security: LGPD, Cloudflare Zero Trust; Infra and tools: Linux, Windows Server / IIS, Docker, Git, Godot; Currently learning: Hermes Agent, Cloudflare, Information Security, Power BI" width="100%"/>
+<img src="./assets/tech-stack.svg" alt="Tech stack. Languages: Python, C#, PowerShell, JavaScript, TypeScript, HTML, CSS; AI and agents: Anthropic API, Claude Code, AI Agents; Data: SQL Server, Oracle, Excel Automation; Cloud: Azure, Amazon S3; Integration and automation: REST APIs, Webhooks, n8n, GitHub Actions; Security: LGPD, Cloudflare Zero Trust; Infra and tools: Linux, Windows Server / IIS, Docker, Git, Godot; Currently learning: MCP, LLM Automation, Hermes Agent, Cloudflare, Information Security, Power BI" width="100%"/>
 
 ## Featured projects
 

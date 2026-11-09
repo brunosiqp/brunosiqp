@@ -90,8 +90,7 @@ LEARNING = "Currently learning"
 TECH_STACK = [
     ("Languages", [("Python", "python"), ("C#", "csharp"), ("PowerShell", "powershell"),
                    ("JavaScript", "javascript"), ("TypeScript", "typescript"), ("HTML", "html"), ("CSS", "css")]),
-    ("AI & agents", [("Anthropic API", "anthropic"), ("Claude Code", "claude"), ("MCP", "mcp"),
-                     ("AI Agents", "agents"), ("LLM Automation", "llm")]),
+    ("AI & agents", [("Anthropic API", "anthropic"), ("Claude Code", "claude"), ("AI Agents", "agents")]),
     ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle"), ("Excel Automation", "excel")]),
     ("Cloud", [("Azure", "azure"), ("Amazon S3", "s3")]),
     ("Integration & automation", [("REST APIs", "rest"), ("Webhooks", "webhooks"), ("n8n", "n8n"),
@@ -99,7 +98,7 @@ TECH_STACK = [
     ("Security", [("LGPD", "lgpd"), ("Cloudflare Zero Trust", "cloudflare")]),
     ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"), ("Docker", "docker"),
                        ("Git", "git"), ("Godot", "godot")]),
-    (LEARNING, [("Hermes Agent", "hermes"), ("Cloudflare", "cloudflare"),
+    (LEARNING, [("MCP", "mcp"), ("LLM Automation", "llm"), ("Hermes Agent", "hermes"), ("Cloudflare", "cloudflare"),
                 ("Information Security", "infosec"), ("Power BI", "powerbi")]),
 ]
 
