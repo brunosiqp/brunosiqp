@@ -98,7 +98,7 @@ TECH_STACK = [
     ("Security", [("LGPD", "lgpd"), ("Cloudflare Zero Trust", "cloudflare")]),
     ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"), ("Docker", "docker"),
                        ("Git", "git"), ("Godot", "godot")]),
-    (LEARNING, [("MCP", "mcp"), ("LLM Automation", "llm"), ("Hermes Agent", "hermes"), ("Cloudflare", "cloudflare"),
+    (LEARNING, [("MCP", "mcp"), ("LLM Automation", "llm"), ("Hermes Agent", "hermes"), ("Ollama", "ollama"), ("Cloudflare", "cloudflare"),
                 ("Information Security", "infosec"), ("Power BI", "powerbi")]),
 ]
 
