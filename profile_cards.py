@@ -91,7 +91,8 @@ TECH_STACK = [
     ("Languages", [("Python", "python"), ("C#", "csharp"), ("PowerShell", "powershell"),
                    ("JavaScript", "javascript"), ("TypeScript", "typescript"), ("HTML", "html"), ("CSS", "css")]),
     ("AI & agents", [("Anthropic API", "anthropic"), ("Claude Code", "claude"), ("AI Agents", "agents")]),
-    ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle"), ("Excel Automation", "excel")]),
+    ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle"), ("Excel Automation", "excel"),
+              ("Power BI", "powerbi")]),
     ("Cloud", [("Azure", "azure"), ("Amazon S3", "s3")]),
     ("Integration & automation", [("REST APIs", "rest"), ("Webhooks", "webhooks"), ("n8n", "n8n"),
                                   ("GitHub Actions", "githubactions")]),
@@ -99,7 +100,7 @@ TECH_STACK = [
     ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"), ("Docker", "docker"),
                        ("Git", "git"), ("Godot", "godot")]),
     (LEARNING, [("MCP", "mcp"), ("LLM Automation", "llm"), ("Hermes Agent", "hermes"), ("Ollama", "ollama"), ("Cloudflare", "cloudflare"),
-                ("Information Security", "infosec"), ("Power BI", "powerbi")]),
+                ("Information Security", "infosec")]),
 ]
 
 EDUCATION = [

@@ -107,7 +107,7 @@ class StackContentTests(unittest.TestCase):
 
     def test_new_tools_in_existing_categories(self):
         for category, name in (("Languages", "TypeScript"), ("Languages", "JavaScript"), ("Languages", "CSS"),
-                               ("Data", "Excel Automation"), ("Integration & automation", "Webhooks"),
+                               ("Data", "Excel Automation"), ("Data", "Power BI"), ("Integration & automation", "Webhooks"),
                                ("Infra & tools", "Windows Server / IIS")):
             self.assertIn(name, self.tools_in(category))
 
@@ -115,7 +115,7 @@ class StackContentTests(unittest.TestCase):
         self.assertEqual(profile_cards.TECH_STACK[-1][0], profile_cards.LEARNING)
         learning = self.tools_in(profile_cards.LEARNING)
         self.assertEqual(learning, ["MCP", "LLM Automation", "Hermes Agent", "Ollama", "Cloudflare",
-                                    "Information Security", "Power BI"])
+                                    "Information Security"])
         svg = profile_cards.tech_stack_card()
         self.assertEqual(svg.count('class="chip-learning"'), len(learning))
 
