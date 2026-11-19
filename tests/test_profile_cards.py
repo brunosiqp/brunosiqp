@@ -114,7 +114,7 @@ class StackContentTests(unittest.TestCase):
     def test_learning_row_is_last_and_styled_apart(self):
         self.assertEqual(profile_cards.TECH_STACK[-1][0], profile_cards.LEARNING)
         learning = self.tools_in(profile_cards.LEARNING)
-        self.assertEqual(learning, ["MCP", "LLM Automation", "Hermes Agent", "Ollama", "Cloudflare",
+        self.assertEqual(learning, ["MCP", "LLM Automation", "LMM (Multimodal AI)", "Hermes Agent", "Ollama", "Cloudflare",
                                     "Information Security"])
         svg = profile_cards.tech_stack_card()
         self.assertEqual(svg.count('class="chip-learning"'), len(learning))
