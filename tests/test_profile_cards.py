@@ -103,22 +103,21 @@ class StackContentTests(unittest.TestCase):
 
     def test_ai_and_agents_category(self):
         self.assertEqual(self.tools_in("AI & agents"),
-                         ["Anthropic API", "Claude Code", "AI Agents"])
+                         ["Anthropic API", "Claude Code", "AI Agents", "LLM Automation"])
 
     def test_security_category(self):
-        self.assertEqual(self.tools_in("Security"), ["LGPD", "Cloudflare Zero Trust"])
+        self.assertEqual(self.tools_in("Security"), ["LGPD", "Cloudflare Zero Trust", "Information Security"])
 
     def test_new_tools_in_existing_categories(self):
         for category, name in (("Languages", "TypeScript"), ("Languages", "JavaScript"), ("Languages", "CSS"),
                                ("Data", "Excel Automation"), ("Data", "Power BI"), ("Integration & automation", "Webhooks"),
-                               ("Infra & tools", "Windows Server / IIS")):
+                               ("Infra & tools", "Windows Server / IIS"), ("Infra & tools", "Docker"), ("Infra & tools", "Kubernetes"), ("Infra & tools", "Minikube")):
             self.assertIn(name, self.tools_in(category))
 
     def test_learning_row_is_last_and_styled_apart(self):
         self.assertEqual(profile_cards.TECH_STACK[-1][0], profile_cards.LEARNING)
         learning = self.tools_in(profile_cards.LEARNING)
-        self.assertEqual(learning, ["MCP", "LLM Automation", "LMM (Multimodal AI)", "Hermes Agent", "Ollama", "Cloudflare",
-                                    "Information Security", "Docker", "n8n"])
+        self.assertEqual(learning, ["MCP", "LMM (Multimodal AI)", "Hermes Agent", "Ollama", "n8n"])
         svg = profile_cards.tech_stack_card()
         self.assertEqual(svg.count('class="chip-learning"'), len(learning))
 

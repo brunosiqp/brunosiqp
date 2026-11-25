@@ -90,17 +90,17 @@ LEARNING = "Currently learning"
 TECH_STACK = [
     ("Languages", [("Python", "python"), ("C#", "csharp"), ("PowerShell", "powershell"),
                    ("JavaScript", "javascript"), ("TypeScript", "typescript"), ("HTML", "html"), ("CSS", "css")]),
-    ("AI & agents", [("Anthropic API", "anthropic"), ("Claude Code", "claude"), ("AI Agents", "agents")]),
+    ("AI & agents", [("Anthropic API", "anthropic"), ("Claude Code", "claude"), ("AI Agents", "agents"), ("LLM Automation", "llm")]),
     ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle"), ("Excel Automation", "excel"),
               ("Power BI", "powerbi")]),
     ("Cloud", [("Azure", "azure"), ("Amazon S3", "s3")]),
     ("Integration & automation", [("REST APIs", "rest"), ("Webhooks", "webhooks"),
                                   ("GitHub Actions", "githubactions")]),
-    ("Security", [("LGPD", "lgpd"), ("Cloudflare Zero Trust", "cloudflare")]),
-    ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"),
+    ("Security", [("LGPD", "lgpd"), ("Cloudflare Zero Trust", "cloudflare"), ("Information Security", "infosec")]),
+    ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"), ("Docker", "docker"), ("Kubernetes", "kubernetes"), ("Minikube", "minikube"),
                        ("Git", "git"), ("Godot", "godot")]),
-    (LEARNING, [("MCP", "mcp"), ("LLM Automation", "llm"), ("LMM (Multimodal AI)", "lmm"), ("Hermes Agent", "hermes"), ("Ollama", "ollama"), ("Cloudflare", "cloudflare"),
-                ("Information Security", "infosec"), ("Docker", "docker"), ("n8n", "n8n")]),
+    (LEARNING, [("MCP", "mcp"), ("LMM (Multimodal AI)", "lmm"), ("Hermes Agent", "hermes"), ("Ollama", "ollama"),
+                ("n8n", "n8n")]),
 ]
 
 EDUCATION = [
