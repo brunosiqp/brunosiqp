@@ -45,7 +45,7 @@ team has the processes, training and visibility to run them every day.
 
 ## Education
 
-<img src="./assets/education.svg" alt="Postgraduate in Data Science & AI at SENAI (2026 – 2027, in progress); Technologist in Systems Analysis and Development at UNIASSELVI (2024 – 2026, completed)" width="100%"/>
+<img src="./assets/education.svg" alt="Postgraduate in Applied AI Engineering at UNIDPS (2026 – 2027, in progress); Postgraduate in Data Science & AI at SENAI (2026 – 2027, in progress); Technologist in Systems Analysis and Development at UNIASSELVI (2024 – 2026, completed)" width="100%"/>
 
 ## Contact
 

@@ -104,6 +104,7 @@ TECH_STACK = [
 ]
 
 EDUCATION = [
+    ("Postgraduate in Applied AI Engineering", "UNIDPS", "2026 – 2027", "In progress"),
     ("Postgraduate in Data Science & Artificial Intelligence", "SENAI", "2026 – 2027", "In progress"),
     ("Technologist in Systems Analysis and Development", "UNIASSELVI", "2024 – 2026", "Completed"),
 ]
