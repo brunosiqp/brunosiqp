@@ -94,13 +94,13 @@ TECH_STACK = [
     ("Data", [("SQL Server", "sqlserver"), ("Oracle", "oracle"), ("Excel Automation", "excel"),
               ("Power BI", "powerbi")]),
     ("Cloud", [("Azure", "azure"), ("Amazon S3", "s3")]),
-    ("Integration & automation", [("REST APIs", "rest"), ("Webhooks", "webhooks"), ("n8n", "n8n"),
+    ("Integration & automation", [("REST APIs", "rest"), ("Webhooks", "webhooks"),
                                   ("GitHub Actions", "githubactions")]),
     ("Security", [("LGPD", "lgpd"), ("Cloudflare Zero Trust", "cloudflare")]),
-    ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"), ("Docker", "docker"),
+    ("Infra & tools", [("Linux", "linux"), ("Windows Server / IIS", "windows"),
                        ("Git", "git"), ("Godot", "godot")]),
     (LEARNING, [("MCP", "mcp"), ("LLM Automation", "llm"), ("LMM (Multimodal AI)", "lmm"), ("Hermes Agent", "hermes"), ("Ollama", "ollama"), ("Cloudflare", "cloudflare"),
-                ("Information Security", "infosec")]),
+                ("Information Security", "infosec"), ("Docker", "docker"), ("n8n", "n8n")]),
 ]
 
 EDUCATION = [
