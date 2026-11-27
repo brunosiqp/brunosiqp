@@ -146,7 +146,7 @@ class CertificationsCardTests(unittest.TestCase):
         positions = [svg.index(profile_cards.escape(t.split(":")[0])) for t in titles]
         self.assertEqual(positions, sorted(positions))
         self.assertEqual(titles[0], "Python Fundamentals for Data Analysis, Data Science and Machine Learning")
-        self.assertIn("69c31d106fe1260abe039cb7", svg)
+        self.assertNotIn("69c31d106fe1260abe039cb7", svg)
         self.assertIn(">Machine Learning<", svg)
 
     def test_disabled_entries_are_not_rendered(self):

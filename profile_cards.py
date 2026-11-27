@@ -114,7 +114,7 @@ EDUCATION = [
 # Set "enabled" to False to hide an entry without deleting it. Dates are "Mon YYYY".
 CERTIFICATIONS = [
     {"title": "Python Fundamentals for Data Analysis, Data Science and Machine Learning",
-     "issuer": "Data Science Academy", "date": "Mar 2026", "credential_id": "69c31d106fe1260abe039cb7",
+     "issuer": "Data Science Academy", "date": "Mar 2026", "credential_id": None,
      "credential_url": None, "skills": ["Python", "Data Analysis", "Data Science", "Machine Learning"],
      "enabled": True},
     {"title": "Microsoft Generative Artificial Intelligence", "issuer": "ProWay", "date": "Sep 2024",
