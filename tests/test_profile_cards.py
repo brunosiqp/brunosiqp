@@ -132,13 +132,70 @@ class StackContentTests(unittest.TestCase):
         self.assertNotIn("help build", text)
 
 
+class CertificationsCardTests(unittest.TestCase):
+    def test_card_is_valid_accessible_and_full_width(self):
+        svg = profile_cards.certifications_card()
+        doc = minidom.parseString(svg)
+        self.assertEqual(doc.documentElement.getAttribute("width"), str(profile_cards.FULL_WIDTH))
+        self.assertEqual(len(doc.getElementsByTagName("title")), 1)
+        self.assertEqual(len(doc.getElementsByTagName("desc")), 1)
+
+    def test_enabled_entries_render_newest_first(self):
+        svg = profile_cards.certifications_card()
+        titles = [c["title"] for c in profile_cards.enabled_sorted(profile_cards.CERTIFICATIONS)]
+        positions = [svg.index(profile_cards.escape(t.split(":")[0])) for t in titles]
+        self.assertEqual(positions, sorted(positions))
+        self.assertEqual(titles[0], "Python Fundamentals for Data Analysis, Data Science and Machine Learning")
+        self.assertIn("69c31d106fe1260abe039cb7", svg)
+        self.assertIn(">Machine Learning<", svg)
+
+    def test_disabled_entries_are_not_rendered(self):
+        applied = next(c for c in profile_cards.CERTIFICATIONS if c["issuer"] == "Microsoft")
+        self.assertFalse(applied["enabled"])
+        svg = profile_cards.certifications_card()
+        self.assertNotIn("Microsoft Foundry SDK", svg)
+        self.assertNotIn("Microsoft Applied Skills", svg)
+
+    def test_enabled_applied_skills_entry_gets_badge(self):
+        entries = [dict(c, enabled=True) for c in profile_cards.CERTIFICATIONS]
+        svg = profile_cards.certifications_card(entries)
+        minidom.parseString(svg)
+        self.assertIn(">Microsoft Applied Skills<", svg)
+
+    def test_sort_puts_newest_first(self):
+        entries = [{"title": t, "date": d, "enabled": True} for t, d in (("a", "Oct 2020"), ("b", "Mar 2026"), ("c", "Sep 2024"))]
+        self.assertEqual([e["title"] for e in profile_cards.enabled_sorted(entries)], ["b", "c", "a"])
+
+
+class MicrosoftLearnCardTests(unittest.TestCase):
+    def test_card_lists_completed_modules(self):
+        svg = profile_cards.microsoft_learn_card()
+        doc = minidom.parseString(svg)
+        self.assertEqual(len(doc.getElementsByTagName("title")), 1)
+        self.assertIn("Completed modules", svg)
+        for module in profile_cards.MICROSOFT_LEARN:
+            self.assertIn(profile_cards.escape(module["title"]), svg)
+        self.assertIn("1 h 20 min", svg)
+
+    def test_disabled_modules_are_not_rendered(self):
+        entries = profile_cards.MICROSOFT_LEARN + [dict(profile_cards.MICROSOFT_LEARN[0], title="Hidden module", enabled=False)]
+        self.assertNotIn("Hidden module", profile_cards.microsoft_learn_card(entries))
+
+    def test_readme_embeds_new_sections_after_education(self):
+        readme = open(os.path.join(os.path.dirname(__file__), "..", "README.md"), encoding="utf-8").read()
+        order = [readme.index(h) for h in ("## Education", "## Certifications", "## Microsoft Learn", "## Contact")]
+        self.assertEqual(order, sorted(order))
+        self.assertIn("./assets/certifications.svg", readme)
+        self.assertIn("./assets/microsoft-learn.svg", readme)
+
+
 class WriteAllTests(unittest.TestCase):
     def test_write_all_creates_every_asset(self):
         with tempfile.TemporaryDirectory() as tmp:
             written = profile_cards.write_all(tmp)
             for rel in written:
                 minidom.parse(os.path.join(tmp, rel))
-        self.assertEqual(len(written), len(profile_cards.PROJECTS) + 3)
+        self.assertEqual(len(written), len(profile_cards.PROJECTS) + 5)
 
 
 if __name__ == "__main__":

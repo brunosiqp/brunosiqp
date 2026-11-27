@@ -39,11 +39,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: python github_stats.py
 
+      - name: Generate profile cards
+        run: python profile_cards.py
+
       - name: Commit and push if changed
         run: |
           git config --local user.email "168676931+brunosiqp@users.noreply.github.com"
           git config --local user.name "brunosiqp"
-          git add github-stats.svg
+          git add github-stats.svg assets/
           git diff --quiet --cached || git commit -m "chore: update GitHub stats"
           git pull --rebase origin main
           git push origin HEAD:main

@@ -47,6 +47,14 @@ team has the processes, training and visibility to run them every day.
 
 <img src="./assets/education.svg" alt="Postgraduate in Applied AI Engineering at UNIDPS (2026 – 2027, in progress); Postgraduate in Data Science & AI at SENAI (2026 – 2027, in progress); Technologist in Systems Analysis and Development at UNIASSELVI (2024 – 2026, completed)" width="100%"/>
 
+## Certifications
+
+<a href="https://www.linkedin.com/in/bruno-siqueira-b81312230/details/certifications/"><img src="./assets/certifications.svg" alt="Certifications: Python Fundamentals for Data Analysis, Data Science and Machine Learning, Data Science Academy (Mar 2026); Microsoft Generative Artificial Intelligence, ProWay (Sep 2024); UX (User Experience), FIAP (Sep 2024); Entrepreneurship in Digital Social Media, IFF – Instituto Federal Fluminense (Oct 2020)" width="100%"/></a>
+
+## Microsoft Learn
+
+<img src="./assets/microsoft-learn.svg" alt="Completed Microsoft Learn modules (Nov 2026): Develop an AI app with the Microsoft Foundry SDK (55 min); Tooling, MCP, and Agent Execution Environments (1 h 20 min); Designing Agent Architecture and SDLC Integration (45 min)" width="100%"/>
+
 ## Contact
 
 Open to talking about automation, processes and data. Reach out on

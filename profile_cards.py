@@ -25,7 +25,9 @@ OCTICONS = {
     "people": "M2 5.5a3.5 3.5 0 1 1 5.898 2.549 5.508 5.508 0 0 1 3.034 4.084.75.75 0 1 1-1.482.235 4 4 0 0 0-7.9 0 .75.75 0 0 1-1.482-.236A5.507 5.507 0 0 1 3.102 8.05 3.493 3.493 0 0 1 2 5.5ZM11 4a3.001 3.001 0 0 1 2.22 5.018 5.01 5.01 0 0 1 2.56 3.012.749.749 0 0 1-.885.954.752.752 0 0 1-.549-.514 3.507 3.507 0 0 0-2.522-2.372.75.75 0 0 1-.574-.73v-.352a.75.75 0 0 1 .416-.672A1.5 1.5 0 0 0 11 5.5.75.75 0 0 1 11 4Zm-5.5-.5a2 2 0 1 0-.001 3.999A2 2 0 0 0 5.5 3.5Z",
     "graph": ICONS["contributions"][0],
     "sparkle": "M7.53 1.282a.5.5 0 0 1 .94 0l.478 1.306a7.492 7.492 0 0 0 4.464 4.464l1.305.478a.5.5 0 0 1 0 .94l-1.305.478a7.492 7.492 0 0 0-4.464 4.464l-.478 1.305a.5.5 0 0 1-.94 0l-.478-1.305a7.492 7.492 0 0 0-4.464-4.464L1.282 8.47a.5.5 0 0 1 0-.94l1.306-.478a7.492 7.492 0 0 0 4.464-4.464Z",
-    "mortar-board": "M7.693 1.066a.747.747 0 0 1 .614 0l7.25 3.25a.75.75 0 0 1 0 1.368L13 6.831v2.794c0 1.024-.81 1.749-1.66 2.173-.893.447-2.075.702-3.34.702-.278 0-.55-.012-.816-.036a.75.75 0 0 1 .133-1.494c.22.02.45.03.683.03 1.082 0 2.025-.221 2.67-.543.69-.345.83-.682.83-.832V7.503L8.307 8.934a.747.747 0 0 1-.614 0L4 7.28v1.663c.296.105.575.275.812.512.438.438.688 1.059.688 1.796v3a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75v-3c0-.737.25-1.358.688-1.796.237-.237.516-.407.812-.512V6.606L.443 5.684a.75.75 0 0 1 0-1.368ZM2.583 5 8 7.428 13.416 5 8 2.572ZM2.5 11.25v2.25H4v-2.25c0-.388-.125-.611-.25-.735a.697.697 0 0 0-.5-.203.707.707 0 0 0-.5.203c-.125.124-.25.347-.25.735Z",
+    "verified": "m9.585.52.929.68c.153.112.331.186.518.215l1.138.175a2.678 2.678 0 0 1 2.24 2.24l.174 1.139c.029.187.103.365.215.518l.68.928a2.677 2.677 0 0 1 0 3.17l-.68.928a1.174 1.174 0 0 0-.215.518l-.175 1.138a2.678 2.678 0 0 1-2.241 2.241l-1.138.175a1.17 1.17 0 0 0-.518.215l-.928.68a2.677 2.677 0 0 1-3.17 0l-.928-.68a1.174 1.174 0 0 0-.518-.215L3.83 14.41a2.678 2.678 0 0 1-2.24-2.24l-.175-1.138a1.17 1.17 0 0 0-.215-.518l-.68-.928a2.677 2.677 0 0 1 0-3.17l.68-.928c.112-.153.186-.331.215-.518l.175-1.14a2.678 2.678 0 0 1 2.24-2.24l1.139-.175c.187-.029.365-.103.518-.215l.928-.68a2.677 2.677 0 0 1 3.17 0ZM7.303 1.728l-.927.68a2.67 2.67 0 0 1-1.18.489l-1.137.174a1.179 1.179 0 0 0-.987.987l-.174 1.136a2.677 2.677 0 0 1-.489 1.18l-.68.928a1.18 1.18 0 0 0 0 1.394l.68.927c.256.348.424.753.489 1.18l.174 1.137c.078.509.478.909.987.987l1.136.174a2.67 2.67 0 0 1 1.18.489l.928.68c.414.305.979.305 1.394 0l.927-.68a2.67 2.67 0 0 1 1.18-.489l1.137-.174a1.18 1.18 0 0 0 .987-.987l.174-1.136a2.67 2.67 0 0 1 .489-1.18l.68-.928a1.176 1.176 0 0 0 0-1.394l-.68-.927a2.686 2.686 0 0 1-.489-1.18l-.174-1.137a1.179 1.179 0 0 0-.987-.987l-1.136-.174a2.677 2.677 0 0 1-1.18-.489l-.928-.68a1.176 1.176 0 0 0-1.394 0ZM11.28 6.78l-3.75 3.75a.75.75 0 0 1-1.06 0L4.72 8.78a.75.75 0 0 1 1.06-1.06l1.22 1.22 3.22-3.22a.75.75 0 0 1 1.06 1.06Z",
+    "book": "M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z",
+    "mortar-board":"M7.693 1.066a.747.747 0 0 1 .614 0l7.25 3.25a.75.75 0 0 1 0 1.368L13 6.831v2.794c0 1.024-.81 1.749-1.66 2.173-.893.447-2.075.702-3.34.702-.278 0-.55-.012-.816-.036a.75.75 0 0 1 .133-1.494c.22.02.45.03.683.03 1.082 0 2.025-.221 2.67-.543.69-.345.83-.682.83-.832V7.503L8.307 8.934a.747.747 0 0 1-.614 0L4 7.28v1.663c.296.105.575.275.812.512.438.438.688 1.059.688 1.796v3a.75.75 0 0 1-.75.75h-3a.75.75 0 0 1-.75-.75v-3c0-.737.25-1.358.688-1.796.237-.237.516-.407.812-.512V6.606L.443 5.684a.75.75 0 0 1 0-1.368ZM2.583 5 8 7.428 13.416 5 8 2.572ZM2.5 11.25v2.25H4v-2.25c0-.388-.125-.611-.25-.735a.697.697 0 0 0-.5-.203.707.707 0 0 0-.5.203c-.125.124-.25.347-.25.735Z",
 }
 
 PROJECTS = [
@@ -108,6 +110,38 @@ EDUCATION = [
     ("Postgraduate in Data Science & Artificial Intelligence", "SENAI", "2026 – 2027", "In progress"),
     ("Technologist in Systems Analysis and Development", "UNIASSELVI", "2024 – 2026", "Completed"),
 ]
+
+# Set "enabled" to False to hide an entry without deleting it. Dates are "Mon YYYY".
+CERTIFICATIONS = [
+    {"title": "Python Fundamentals for Data Analysis, Data Science and Machine Learning",
+     "issuer": "Data Science Academy", "date": "Mar 2026", "credential_id": "69c31d106fe1260abe039cb7",
+     "credential_url": None, "skills": ["Python", "Data Analysis", "Data Science", "Machine Learning"],
+     "enabled": True},
+    {"title": "Microsoft Generative Artificial Intelligence", "issuer": "ProWay", "date": "Sep 2024",
+     "credential_id": None, "credential_url": None,
+     "skills": ["Generative AI", "Artificial Intelligence", "Machine Learning"], "enabled": True},
+    {"title": "UX (User Experience)", "issuer": "FIAP", "date": "Sep 2024", "credential_id": None,
+     "credential_url": None, "skills": ["User Experience (UX)", "Web Design"], "enabled": True},
+    {"title": "Entrepreneurship in Digital Social Media", "issuer": "IFF – Instituto Federal Fluminense",
+     "date": "Oct 2020", "credential_id": None, "credential_url": None,
+     "skills": ["Entrepreneurship", "Digital Marketing"], "enabled": True},
+    # Flip to True (and fill in the date and URL) after passing the assessment.
+    {"title": "Microsoft Applied Skills: Build a generative AI chat app with the Microsoft Foundry SDK",
+     "issuer": "Microsoft", "date": None, "credential_id": None, "credential_url": None,
+     "skills": ["Microsoft Foundry", "Azure OpenAI", "Responses API", "Python", "Chat History"],
+     "enabled": False, "badge": "Microsoft Applied Skills"},
+]
+
+MICROSOFT_LEARN = [
+    {"title": "Develop an AI app with the Microsoft Foundry SDK", "issuer": "Microsoft Learn",
+     "date": "Nov 2026", "duration": "55 min", "enabled": True},
+    {"title": "Tooling, MCP, and Agent Execution Environments", "issuer": "Microsoft Learn",
+     "date": "Nov 2026", "duration": "1 h 20 min", "enabled": True},
+    {"title": "Designing Agent Architecture and SDLC Integration", "issuer": "Microsoft Learn",
+     "date": "Nov 2026", "duration": "45 min", "enabled": True},
+]
+
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 STATUS_COLORS = {"In progress": "#D29922", "Completed": "#3fb950"}
 
@@ -216,6 +250,88 @@ def education_card():
     return frame(FULL_WIDTH, height, "".join(parts))
 
 
+def date_key(date):
+    try:
+        month, year = (date or "").split()
+        return int(year), MONTHS.index(month) + 1
+    except ValueError:
+        return 0, 0
+
+
+def enabled_sorted(entries):
+    return sorted((e for e in entries if e.get("enabled")), key=lambda e: date_key(e.get("date")), reverse=True)
+
+
+def accessible_frame(width, height, title, desc, body):
+    svg = frame(width, height, body).replace("  </style>", f"    .tag {{ font: 500 11px {FONT}; fill: #8b949e; }}\n  </style>", 1)
+    head, rest = svg.split("\n", 1)
+    head = head.replace("<svg ", '<svg role="img" aria-labelledby="t d" ', 1)
+    return f'{head}\n  <title id="t">{escape(title)}</title>\n  <desc id="d">{escape(desc)}</desc>\n{rest}'
+
+
+def tags(labels, x, y):
+    parts = []
+    for label in labels:
+        width = 6.3 * len(label) + 16
+        parts.append(f'<rect x="{x:.0f}" y="{y}" width="{width:.0f}" height="20" rx="10" fill="#161b22" stroke="#30363d" />'
+                     f'<text x="{x + width / 2:.0f}" y="{y + 14}" text-anchor="middle" class="tag">{escape(label)}</text>')
+        x += width + 6
+    return "".join(parts)
+
+
+def timeline_rows(rows, pad=28, top=28):
+    """rows: (icon, color, title_lines, meta, tags, pills). Same timeline look as the education card."""
+    line_x = pad + 16
+    parts, centers, y = [], [], top
+    for icon_name, color, title_lines, meta, labels, pills in rows:
+        centers.append(y + 16)
+        parts.append(f'<circle cx="{line_x}" cy="{y + 16}" r="16" fill="#161b22" stroke="{color}" />'
+                     + icon(icon_name, line_x - 8, y + 8, color))
+        for i, line in enumerate(title_lines):
+            parts.append(f'<text x="{line_x + 32}" y="{y + 14 + i * 20}" class="heading">{escape(line)}</text>')
+        meta_y = y + 36 + (len(title_lines) - 1) * 20
+        parts.append(f'<text x="{line_x + 32}" y="{meta_y}" class="text">{escape(meta)}</text>')
+        for i, (text, pill_color) in enumerate(pills):
+            parts.append(pill(text, FULL_WIDTH - pad, y + 2 + i * 28, pill_color))
+        bottom = meta_y + 6
+        if labels:
+            parts.append(tags(labels, line_x + 32, bottom + 4))
+            bottom += 24
+        y = max(bottom, y + len(pills) * 28) + 24
+    if len(centers) > 1:
+        parts.insert(0, f'<line x1="{line_x}" y1="{centers[0]}" x2="{line_x}" y2="{centers[-1]}" stroke="#30363d" stroke-width="2" />')
+    return "".join(parts), y - 24 + pad
+
+
+def certifications_card(entries=None):
+    entries = enabled_sorted(CERTIFICATIONS if entries is None else entries)
+    rows = []
+    for e in entries:
+        credential = e.get("credential_id") and f"Credential ID {e['credential_id']}"
+        meta = " · ".join(filter(None, [e["issuer"], credential]))
+        pills = [(e["date"], ACCENT)] if e.get("date") else []
+        if e.get("badge"):
+            pills.append((e["badge"], "#a371f7"))
+        color = "#a371f7" if e.get("badge") else "#3fb950"
+        rows.append(("verified", color, wrap(e["title"], 72, max_lines=2), meta, e.get("skills", []), pills))
+    body, height = timeline_rows(rows)
+    desc = "; ".join(f"{e['title']}, {e['issuer']} ({e.get('date') or 'date pending'})" for e in entries)
+    return accessible_frame(FULL_WIDTH, height, "Certifications", desc, body)
+
+
+def microsoft_learn_card(entries=None):
+    entries = enabled_sorted(MICROSOFT_LEARN if entries is None else entries)
+    pad = 28
+    header = (icon("book", pad + 8, pad - 2)
+              + f'<text x="{pad + 32}" y="{pad + 11}" class="title">Completed modules</text>'
+              + f'<text x="{FULL_WIDTH - pad}" y="{pad + 11}" text-anchor="end" class="text">Microsoft Learn training, not certifications</text>')
+    rows = [("book", ACCENT, [e["title"]], f"{e['issuer']} · {e['date']} · {e['duration']}", [], [("Completed", "#3fb950")])
+            for e in entries]
+    body, height = timeline_rows(rows, pad, top=pad + 36)
+    desc = "Completed Microsoft Learn modules: " + "; ".join(f"{e['title']} ({e['duration']}, {e['date']})" for e in entries)
+    return accessible_frame(FULL_WIDTH, height, "Microsoft Learn: completed modules", desc, header + body)
+
+
 def tech_chip(name, key, x, y, learning=False):
     size, color, path = TECH_ICONS[key]
     width = chip_width(name)
@@ -263,6 +379,8 @@ def write_all(root="."):
     files["assets/what-i-do.svg"] = what_i_do_card()
     files["assets/education.svg"] = education_card()
     files["assets/tech-stack.svg"] = tech_stack_card()
+    files["assets/certifications.svg"] = certifications_card()
+    files["assets/microsoft-learn.svg"] = microsoft_learn_card()
     for rel, svg in files.items():
         path = os.path.join(root, rel)
         os.makedirs(os.path.dirname(path), exist_ok=True)
