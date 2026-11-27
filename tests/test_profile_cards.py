@@ -145,16 +145,21 @@ class CertificationsCardTests(unittest.TestCase):
         titles = [c["title"] for c in profile_cards.enabled_sorted(profile_cards.CERTIFICATIONS)]
         positions = [svg.index(profile_cards.escape(t.split(":")[0])) for t in titles]
         self.assertEqual(positions, sorted(positions))
-        self.assertEqual(titles[0], "Python Fundamentals for Data Analysis, Data Science and Machine Learning")
+        self.assertEqual(titles[1], "Python Fundamentals for Data Analysis, Data Science and Machine Learning")
         self.assertNotIn("69c31d106fe1260abe039cb7", svg)
         self.assertIn(">Machine Learning<", svg)
 
     def test_disabled_entries_are_not_rendered(self):
-        applied = next(c for c in profile_cards.CERTIFICATIONS if c["issuer"] == "Microsoft")
-        self.assertFalse(applied["enabled"])
-        svg = profile_cards.certifications_card()
+        entries = [dict(c, enabled=c["issuer"] != "Microsoft") for c in profile_cards.CERTIFICATIONS]
+        svg = profile_cards.certifications_card(entries)
         self.assertNotIn("Microsoft Foundry SDK", svg)
         self.assertNotIn("Microsoft Applied Skills", svg)
+
+    def test_applied_skills_is_live_and_newest(self):
+        first = profile_cards.enabled_sorted(profile_cards.CERTIFICATIONS)[0]
+        self.assertEqual(first["issuer"], "Microsoft")
+        self.assertEqual(first["date"], "Nov 2026")
+        self.assertIn(">Microsoft Applied Skills<", profile_cards.certifications_card())
 
     def test_enabled_applied_skills_entry_gets_badge(self):
         entries = [dict(c, enabled=True) for c in profile_cards.CERTIFICATIONS]

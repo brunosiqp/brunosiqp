@@ -49,7 +49,7 @@ team has the processes, training and visibility to run them every day.
 
 ## Certifications
 
-<a href="https://www.linkedin.com/in/bruno-siqueira-b81312230/details/certifications/"><img src="./assets/certifications.svg" alt="Certifications: Python Fundamentals for Data Analysis, Data Science and Machine Learning, Data Science Academy (Mar 2026); Microsoft Generative Artificial Intelligence, ProWay (Sep 2024); UX (User Experience), FIAP (Sep 2024); Entrepreneurship in Digital Social Media, IFF – Instituto Federal Fluminense (Oct 2020)" width="100%"/></a>
+<a href="https://www.linkedin.com/in/bruno-siqueira-b81312230/details/certifications/"><img src="./assets/certifications.svg" alt="Certifications: Microsoft Applied Skills: Build a generative AI chat app with the Microsoft Foundry SDK, Microsoft (Nov 2026); Python Fundamentals for Data Analysis, Data Science and Machine Learning, Data Science Academy (Mar 2026); Microsoft Generative Artificial Intelligence, ProWay (Sep 2024); UX (User Experience), FIAP (Sep 2024); Entrepreneurship in Digital Social Media, IFF – Instituto Federal Fluminense (Oct 2020)" width="100%"/></a>
 
 ## Microsoft Learn
 

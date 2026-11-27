@@ -125,11 +125,10 @@ CERTIFICATIONS = [
     {"title": "Entrepreneurship in Digital Social Media", "issuer": "IFF – Instituto Federal Fluminense",
      "date": "Oct 2020", "credential_id": None, "credential_url": None,
      "skills": ["Entrepreneurship", "Digital Marketing"], "enabled": True},
-    # Flip to True (and fill in the date and URL) after passing the assessment.
     {"title": "Microsoft Applied Skills: Build a generative AI chat app with the Microsoft Foundry SDK",
-     "issuer": "Microsoft", "date": None, "credential_id": None, "credential_url": None,
+     "issuer": "Microsoft", "date": "Nov 2026", "credential_id": None, "credential_url": None,
      "skills": ["Microsoft Foundry", "Azure OpenAI", "Responses API", "Python", "Chat History"],
-     "enabled": False, "badge": "Microsoft Applied Skills"},
+     "enabled": True, "badge": "Microsoft Applied Skills"},
 ]
 
 MICROSOFT_LEARN = [
